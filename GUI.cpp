@@ -118,8 +118,8 @@ int main()
 	// Variables
 	GLuint vertexShader{};
 	GLuint fragShader{};
-	int windowSize_x = 800;
-	int windowSize_y = 800;
+	int windowSize_x = 1000;
+	int windowSize_y = 1000;
 	float WindowCoords_x;
 	float windowCoords_y;
 
@@ -179,7 +179,7 @@ int main()
 	GraphicalObj rectangle(&rect, &indices);
 	GraphicalObj triangle(&vertices, NULL);
 
-	static float RecScale_x = 0.5;
+	static float RecScale_x = 1;
 	static float RecScale_y = RecScale_x;
 
 	// Particle Physics ---------------------------------------------------------------------------------------------------
