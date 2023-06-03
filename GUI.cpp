@@ -1,4 +1,5 @@
 #include"GUI.h"
+#include"Shader.h"
 
 // Prototype Functinos (Callbacks)
 static float g_xpos, g_ypos;
@@ -154,7 +155,8 @@ int main()
 	// Mouse Button Pressed Callback
 	//glfwSetMouseButtonCallback(window, mouse_clicked);
 	// Shader Compilation
-	ShaderInit(vertexShader, fragShader);
+	Shader MainShader("E:/projects/PBD/Shader.vs", "E:/projects/PBD/Shader.fs");
+	MainShader.use();
 
 	// Variables and Objects declaration ----------------------------------------------------------------------------------
 	vector<float> vertices =

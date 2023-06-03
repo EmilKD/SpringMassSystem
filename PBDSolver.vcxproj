@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\Projects\DynamicsSim\PBDSolver\Libraries\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Projects\DynamicsSim\PBDSolver\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\projects\PBD\Libraries\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\projects\PBD\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
