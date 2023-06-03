@@ -1,0 +1,4 @@
+﻿  GUI.cpp
+E:\Projects\DynamicsSim\PBDSolver\GUI.cpp(22,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+E:\Projects\DynamicsSim\PBDSolver\GUI.cpp(23,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  PBDSolver.vcxproj -> E:\Projects\DynamicsSim\PBDSolver\x64\Debug\PBDSolver.exe
