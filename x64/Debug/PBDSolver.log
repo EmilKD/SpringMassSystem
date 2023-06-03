@@ -1,4 +1,4 @@
 ﻿  GUI.cpp
-E:\Projects\PBD\GUI.cpp(22,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-E:\Projects\PBD\GUI.cpp(23,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  PBDSolver.vcxproj -> E:\Projects\PBD\x64\Debug\PBDSolver.exe
+E:\projects\PBD\GUI.cpp(23,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+E:\projects\PBD\GUI.cpp(24,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  PBDSolver.vcxproj -> E:\projects\PBD\x64\Debug\PBDSolver.exe
