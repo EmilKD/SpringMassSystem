@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\Projects\DynamicsSim\PBDSolver\x64\Debug\PBDSolver.exe</FullPath>
+      <FullPath>E:\Projects\PBD\x64\Debug\PBDSolver.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

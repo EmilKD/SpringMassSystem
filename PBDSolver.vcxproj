@@ -150,6 +150,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="PDB.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GUI.h" />
