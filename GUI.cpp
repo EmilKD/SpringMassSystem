@@ -33,7 +33,7 @@ static void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 }
 
 // Graphical Object Class Functions
-GraphicalObj::GraphicalObj(vector<float>* vertices, vector<int>* indices)
+GraphicalObj::GraphicalObj(vector<float>* vertices, vector<int>* indices = NULL)
 {	
 	glGenBuffers(1, &VBO);
 	glGenVertexArrays(1, &VAO);
@@ -57,7 +57,7 @@ GraphicalObj::~GraphicalObj()
 }
 
 
-void GraphicalObj::VertexUpdate(vector<float>*vertices, vector<int>*indices)
+void GraphicalObj::VertexUpdate(vector<float>*vertices, vector<int>*indices = NULL)
 {
 	vertexBuffer.clear();
 	indexBuffer.clear();
@@ -148,22 +148,25 @@ int main()
 		return -1;
 	}
 
+	// CallBacks -------------------------------------------------------------------------------------------------
 	// updating viewport size if window size is changed CallBack
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	// Mouse Position CallBack
 	glfwSetCursorPosCallback(window, cursor_pos_callBack);
 	// Mouse Button Pressed Callback
 	//glfwSetMouseButtonCallback(window, mouse_clicked);
-	// Shader Compilation
+	
+
+	// Shader Compilation --------------------------------------------------------------------------------------------
 	Shader MainShader("E:/projects/PBD/Shader.vs", "E:/projects/PBD/Shader.fs");
 	MainShader.use();
 
-	// Variables and Objects declaration ----------------------------------------------------------------------------------
+	// Variables and Objects declaration------------------------------------------------------------------------------
 	vector<float> vertices =
 	{
-		0.8f, -0.5f, 0.0f,
-		1.0f, -0.5f, 0.0f,
-		0.9f, 0.5f, 0.0f
+		0.5f, -0.5f, 0.0f, 0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f,
+		0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f
 	};
 
 	vector<float> rect = {
@@ -179,7 +182,7 @@ int main()
 	};
 
 	GraphicalObj rectangle(&rect, &indices);
-	GraphicalObj triangle(&vertices, NULL);
+	GraphicalObj triangle(&vertices);
 
 	static float RecScale_x = 1;
 	static float RecScale_y = RecScale_x;
@@ -214,14 +217,14 @@ int main()
 
 			
 		}	
-		
+	
 		// Physics Sim
 		//double time = glfwGetTime();
 
 		rectangle.BufferUpdate();
 		rectangle.DrawShape();
-		//triangle.BufferUpdate();
-		//triangle.DrawShape();
+		triangle.BufferUpdate();
+		triangle.DrawShape();
 	}
 
 	// Unbinding and closing all glfw windows and clearing opbjects
