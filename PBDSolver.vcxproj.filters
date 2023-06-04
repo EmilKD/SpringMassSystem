@@ -16,30 +16,36 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{abbd6f61-c51f-401e-a8fe-787d5ced8d6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{fac1992a-5609-41a2-9278-772232b2f03e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PBD">
+      <UniqueIdentifier>{b79b2afa-da88-46f4-a48f-aa62dbcec409}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PDB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="PDB.cpp">
+      <Filter>Source Files\PBD</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PDB.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Source Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="PDB.h">
+      <Filter>Source Files\PBD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
