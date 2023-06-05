@@ -1,5 +1,6 @@
 #include"shader.h"
-
+#define STB_IMAGE_IMPLEMENTATION
+#include"stb_image.h"
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -61,7 +62,7 @@ void Shader::use()
 {
     glUseProgram(ID);
 }
-/*
+
 void Shader::CreateTexture(const char* filePath, string fileFormat)
 {
     glEnable(GL_BLEND);
@@ -91,7 +92,7 @@ void Shader::CreateTexture(const char* filePath, string fileFormat)
     glBindTexture(GL_TEXTURE_2D, texture);
 
 }
-*/
+
 
 void Shader::setBool(const string& name, bool value) const
 {
