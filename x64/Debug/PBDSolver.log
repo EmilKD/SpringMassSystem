@@ -1,5 +1,13 @@
 ﻿  Graphics.cpp
-D:\Project\PBD\Graphics.cpp(26,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Project\PBD\Graphics.cpp(27,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Project\PBD\Graphics.cpp(200,23): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Project\PBD\Graphics.cpp(18,22): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Project\PBD\Graphics.cpp(40,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Project\PBD\Graphics.cpp(41,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Project\PBD\Graphics.cpp(42,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Project\PBD\Graphics.cpp(43,42): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Project\PBD\Graphics.cpp(63,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
+glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
+glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
+glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
   PBDSolver.vcxproj -> D:\Project\PBD\x64\Debug\PBDSolver.exe
