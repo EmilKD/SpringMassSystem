@@ -49,7 +49,7 @@ public:
 	vector<Particle> Particles{};
 	int n{ 0 };
 	float time{ 0.0f };
-	float Gravity{ 9.8f };
+	float Gravity{ -0.98f };
 	float Drag{ 0.1f };
 
 private:

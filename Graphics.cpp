@@ -47,6 +47,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
+		cout << endl;
 		for (Particle p : ps.Particles)
 		{
 			cout << "Particle #" << p.ID << " pos: " << "x:" << p.p[0] << " y:" << p.p[1] << " z:" << p.p[2] << endl << endl;
@@ -66,6 +67,9 @@ static void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		ps.AddParticle(&p);
 	}
 }
+
+void GetParticleState(const ParticleSystem* ps, vector<float>* dst);
+void EulerSolver(ParticleSystem* ps, float DeltaT);
 
 // Graphical Object Class Functions
 GraphicalObj::GraphicalObj(vector<float>* vertices, vector<int>* indices = NULL)
@@ -219,6 +223,12 @@ int main()
 	GraphicalObj rectangle(&rect, &indices);
 	GraphicalObj triangle(&vertices);
 
+	double previousTime{ 0.0 };
+	double DeltaT{ 0.0 };
+	double time{ 0.0 };
+
+	vector<float> test{};
+	glm::mat4 trans = glm::mat4(1.0f);
 
 	// While Loop ---------------------------------------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
@@ -245,7 +255,7 @@ int main()
 			rectangle.VertexUpdate(&rect, &indices);
 			*/
 
-			glm::mat4 trans = glm::mat4(1.0f);
+			trans = glm::mat4(1.0f);
 			trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
 			trans = glm::translate(trans, glm::vec3(wc_x, wc_y, 0.0f));
 			unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
@@ -255,12 +265,36 @@ int main()
 		
 		
 		// Physics Sim
-		//double time = glfwGetTime();
+		time = glfwGetTime();
+		if ((time - previousTime) > 0.01 || true)
+		{
+			DeltaT = time - previousTime;
 
-		rectangle.BufferUpdate();
-		rectangle.DrawShape();
+			EulerSolver(&ps, DeltaT);
+			GetParticleState(&ps, &test);
+			for (float e : test)
+				cout << e << endl;
+			cout << endl;
+
+			previousTime = time;
+
+			if (!ps.Particles.empty())
+			{
+				trans = glm::mat4(1.0f);
+				trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
+				trans = glm::translate(trans, glm::vec3(ps.Particles[0].p[0], ps.Particles[0].p[1], 0.0f));
+				unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
+				glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
+				rectangle.BufferUpdate();
+				rectangle.DrawShape();
+			}
+		}
+		//cout << time << endl;
+
+		
 		//triangle.BufferUpdate();
 		//triangle.DrawShape();
+		
 		
 	}
 

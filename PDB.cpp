@@ -2,8 +2,7 @@
 #include "PDB.h"
 
 // Global Variables --------------------------------------------------------------------------------------------
-vector<float> temp1{};
-vector<float> temp2{};
+
 vector<array<int, 2>> SpringParticles{};
 vector<array<float, 2>> SpringConsts{};
 vector<array<float, 3>> SpringLengths{};
@@ -56,13 +55,11 @@ void ParticleSystem::ClearForces()
 
 void ParticleSystem::CalculateForces()
 {
-	for(Particle p: Particles)
+	for (int i{0}; i<Particles.size(); ++i)
 	{
-		p.f[0] += Gravity - Drag * p.v[0];
-		p.f[1] += Gravity - Drag * p.v[1];
-		p.f[2] += Gravity - Drag * p.v[2];
+		Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
 	}
-
+	/*
 	for(int i=0; i<int(SpringParticles.size()); ++i)
 	{
 		SpringForce(&Particles[SpringParticles[i][0]], 
@@ -71,6 +68,7 @@ void ParticleSystem::CalculateForces()
 			SpringConsts[i][1], 
 			SpringLengths[i]);
 	}
+	*/
 }
 
 
@@ -109,7 +107,7 @@ void SetParticleState(ParticleSystem* ps, vector<float>* src)
 void ParticleDerivative(ParticleSystem* ps, vector<float>* dst)
 {
 	ps->ClearForces();
-	ps->CalculateForces(); // Later Going to be Initialized
+	ps->CalculateForces();
 
 	for (Particle p : ps->Particles)
 	{
@@ -124,14 +122,16 @@ void ParticleDerivative(ParticleSystem* ps, vector<float>* dst)
 
 void ScaleUp(vector<float>* v1, vector<float>* v2, float h)
 {
-	for(int i=0; i<int(v1->size()); ++i)
-	{
-		v1->at(i) = v1->at(i) + v2->at(i)*h;
-	}
+		for (int i = 0; i<int(v1->size()); ++i)
+		{
+			v1->at(i) = v1->at(i) + v2->at(i) * h;
+		}
 }
 
 void EulerSolver(ParticleSystem* ps, float DeltaT)
 {
+	vector<float> temp1{};
+	vector<float> temp2{};
 	GetParticleState(ps, &temp1);
 	ParticleDerivative(ps, &temp2);
 	ScaleUp(&temp1, &temp2, DeltaT);
@@ -139,24 +139,6 @@ void EulerSolver(ParticleSystem* ps, float DeltaT)
 	ps->time += DeltaT;
 }
 
-// Create Solver Class 
-
-/*
-int main()
-{
-	float mass{ 1.0 };
-	array<float, 3> pos{ 1,1,1 };
-	array<float, 3> vel{ 2,2,2 };
-	array<float, 3> force{ 3,3,3 };
-
-	Particle p(1.0, &pos, &vel, &force);
-
-	ParticleSystem ps;
-
-	ps.AddParticle(&p);
-
-	std::cout << p.f[0] << p.f[1] << p.f[2];
-
-	return 0;
-}
-*/
+// To Do:
+//		Create Solver Class 
+//		Use GLM for calculations
