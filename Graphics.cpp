@@ -4,10 +4,24 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-// Prototype Functinos (Callbacks)
+using std::cout, std::endl;
+
 static float g_xpos, g_ypos;
 static bool left_mouse_button;
+// Variables
+GLuint vertexShader{};
+GLuint fragShader{};
+int windowSize_x = 1000;
+int windowSize_y = 1000;
+float wc_x;
+float wc_y;
+static float Scale_x = 0.2;
+static float Scale_y = Scale_x;
 
+// Particle Physics ---------------------------------------------------------------------------------------------------
+ParticleSystem ps;
+
+// CallBacks ----------------------------------------------------------------------------------------------------------
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -25,14 +39,32 @@ static void cursor_pos_callBack(GLFWwindow* window, double xpos, double ypos)
 {
 	g_xpos = xpos;
 	g_ypos = ypos;
+	wc_x = (2 * (xpos / windowSize_x) - 1) / Scale_x;
+	wc_y = (-2 * (ypos / windowSize_y) + 1) / Scale_y;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		for (Particle p : ps.Particles)
+		{
+			cout << "Particle #" << p.ID << " pos: " << "x:" << p.p[0] << " y:" << p.p[1] << " z:" << p.p[2] << endl << endl;
+		}
+		cout << "Number of Particles: " << ps.Particles.size() << endl;
+	}
 }
 
 static void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 {
-	if (button == GLFW_PRESS)
-		left_mouse_button = true;
-	else if (button == GLFW_RELEASE)
-		left_mouse_button = false;
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
+	{
+		array<float, 3> pos{ wc_x, wc_y, 0};
+		int lastID = ps.Particles.size();
+		
+		Particle p(lastID, 1.0f, &pos);
+		ps.AddParticle(&p);
+	}
 }
 
 // Graphical Object Class Functions
@@ -112,25 +144,13 @@ void GraphicalObj::DrawShape()
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
-}
+} 
 
-// Coordinate Transformation Functions 
-
-
-// Circle function needed
 
 
 // Main -----------------------------------------------------------------------------------------------------------------------------------
 int main()
 {
-	// Variables
-	GLuint vertexShader{};
-	GLuint fragShader{};
-	int windowSize_x = 1000;
-	int windowSize_y = 1000;
-	float wc_x;
-	float wc_y;
-
 	// GLFW initialization ----------------------------------------------------------------------------------
 	glfwInit();
 	// setting window hints aka OpenGL version and profile
@@ -161,7 +181,9 @@ int main()
 	// Mouse Position CallBack
 	glfwSetCursorPosCallback(window, cursor_pos_callBack);
 	// Mouse Button Pressed Callback
-	//glfwSetMouseButtonCallback(window, mouse_clicked);
+	glfwSetMouseButtonCallback(window, mouse_clicked);
+	// SpaceBar CallBack
+	glfwSetKeyCallback(window, key_callback);
 	
 
 	// Shader Compilation --------------------------------------------------------------------------------------------
@@ -197,12 +219,6 @@ int main()
 	GraphicalObj rectangle(&rect, &indices);
 	GraphicalObj triangle(&vertices);
 
-	static float Scale_x = 0.2;
-	static float Scale_y = Scale_x;
-
-	// Particle Physics ---------------------------------------------------------------------------------------------------
-	ParticleSystem ps;
-
 
 	// While Loop ---------------------------------------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
@@ -215,9 +231,6 @@ int main()
 		glfwPollEvents();
 		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		wc_x = (2 * (g_xpos / windowSize_x) - 1) / Scale_x;
-		wc_y = (- 2 * (g_ypos / windowSize_y) + 1) / Scale_y;
 
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 		{
@@ -239,7 +252,8 @@ int main()
 			glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
 
 		}	
-	
+		
+		
 		// Physics Sim
 		//double time = glfwGetTime();
 
@@ -247,6 +261,7 @@ int main()
 		rectangle.DrawShape();
 		//triangle.BufferUpdate();
 		//triangle.DrawShape();
+		
 	}
 
 	// Unbinding and closing all glfw windows and clearing opbjects

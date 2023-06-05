@@ -41,31 +41,32 @@ ParticleSystem::ParticleSystem()
 
 void ParticleSystem::AddParticle(Particle* p)
 {
-	Particles.push_back(p);
+	Particles.push_back(*p);
 	n = int(Particles.size());
 }
 
+
 void ParticleSystem::ClearForces()
 {
-	for(Particle* p: Particles)
+	for(Particle p: Particles)
 	{
-		p->f = { 0.0f,0.0f,0.0f };
+		p.f = { 0.0f,0.0f,0.0f };
 	}
 }
 
 void ParticleSystem::CalculateForces()
 {
-	for(Particle* p: Particles)
+	for(Particle p: Particles)
 	{
-		p->f[0] += Gravity - Drag * p->v[0];
-		p->f[1] += Gravity - Drag * p->v[1];
-		p->f[2] += Gravity - Drag * p->v[2];
+		p.f[0] += Gravity - Drag * p.v[0];
+		p.f[1] += Gravity - Drag * p.v[1];
+		p.f[2] += Gravity - Drag * p.v[2];
 	}
 
 	for(int i=0; i<int(SpringParticles.size()); ++i)
 	{
-		SpringForce(Particles[SpringParticles[i][0]], 
-			Particles[SpringParticles[i][1]], 
+		SpringForce(&Particles[SpringParticles[i][0]], 
+			&Particles[SpringParticles[i][1]], 
 			SpringConsts[i][0], 
 			SpringConsts[i][1], 
 			SpringLengths[i]);
@@ -81,27 +82,27 @@ int ParticleDim(const ParticleSystem* ps)
 
 void GetParticleState(const ParticleSystem* ps, vector<float>* dst)
 {
-	for(Particle* p: ps->Particles)
+	for(Particle p: ps->Particles)
 	{
-		dst->push_back(p->p[0]);
-		dst->push_back(p->p[1]);
-		dst->push_back(p->p[2]);
-		dst->push_back(p->v[0]);
-		dst->push_back(p->v[1]);
-		dst->push_back(p->p[2]);
+		dst->push_back(p.p[0]);
+		dst->push_back(p.p[1]);
+		dst->push_back(p.p[2]);
+		dst->push_back(p.v[0]);
+		dst->push_back(p.v[1]);
+		dst->push_back(p.p[2]);
 	}
 }
 
-void SetParticleState(const ParticleSystem* ps, vector<float>* src)
+void SetParticleState(ParticleSystem* ps, vector<float>* src)
 {
 	for (int i=0; i < ps->n; ++i)
 	{
-		ps->Particles[i]->p[0] = src->at(6 * i);
-		ps->Particles[i]->p[1] = src->at(6 * i + 1);
-		ps->Particles[i]->p[2] = src->at(6 * i + 2);
-		ps->Particles[i]->v[0] = src->at(6 * i + 3);
-		ps->Particles[i]->v[1] = src->at(6 * i + 4);
-		ps->Particles[i]->v[2] = src->at(6 * i + 5);
+		ps->Particles[i].p[0] = src->at(6 * i);
+		ps->Particles[i].p[1] = src->at(6 * i + 1);
+		ps->Particles[i].p[2] = src->at(6 * i + 2);
+		ps->Particles[i].v[0] = src->at(6 * i + 3);
+		ps->Particles[i].v[1] = src->at(6 * i + 4);
+		ps->Particles[i].v[2] = src->at(6 * i + 5);
 	}
 }
 
@@ -110,14 +111,14 @@ void ParticleDerivative(ParticleSystem* ps, vector<float>* dst)
 	ps->ClearForces();
 	ps->CalculateForces(); // Later Going to be Initialized
 
-	for (Particle* p : ps->Particles)
+	for (Particle p : ps->Particles)
 	{
-		dst->push_back(p->v[0]);
-		dst->push_back(p->v[1]);
-		dst->push_back(p->v[2]);
-		dst->push_back(p->f[0] / p->m);
-		dst->push_back(p->f[1] / p->m);
-		dst->push_back(p->f[2] / p->m);
+		dst->push_back(p.v[0]);
+		dst->push_back(p.v[1]);
+		dst->push_back(p.v[2]);
+		dst->push_back(p.f[0] / p.m);
+		dst->push_back(p.f[1] / p.m);
+		dst->push_back(p.f[2] / p.m);
 	}
 }
 
