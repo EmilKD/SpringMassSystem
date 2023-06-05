@@ -197,11 +197,12 @@ int main()
 	GraphicalObj rectangle(&rect, &indices);
 	GraphicalObj triangle(&vertices);
 
-	static float Scale_x = 2;
+	static float Scale_x = 0.2;
 	static float Scale_y = Scale_x;
 
 	// Particle Physics ---------------------------------------------------------------------------------------------------
 	ParticleSystem ps;
+
 
 	// While Loop ---------------------------------------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
@@ -215,19 +216,27 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		wc_x = 2 * (g_xpos / windowSize_x) - 1;
-		wc_y = -2 * (g_ypos / windowSize_y) + 1;
+		wc_x = (2 * (g_xpos / windowSize_x) - 1) / Scale_x;
+		wc_y = (- 2 * (g_ypos / windowSize_y) + 1) / Scale_y;
 
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 		{
+			/* Relic
 			rect = {
 					// Position                                      Color                       Texture Coords
 					wc_x + 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.5f, 0.0f, 0.0f,     1.0f, 1.0f,       //top right
 					wc_x + 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.5f, 0.0f,     1.0f, 0.0f,       //bottom right
-					wc_x - 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.0f, 0.5f,     0.0f, 0.0f,       //top left
-					wc_x - 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.25f, 0.25f, 0.0f,    0.0f, 1.0f      //bottom left
+					wc_x - 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.0f, 0.5f,     0.0f, 0.0f,       //bottom left
+					wc_x - 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.25f, 0.25f, 0.0f,    0.0f, 1.0f	   //top left
 			};
 			rectangle.VertexUpdate(&rect, &indices);
+			*/
+
+			glm::mat4 trans = glm::mat4(1.0f);
+			trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
+			trans = glm::translate(trans, glm::vec3(wc_x, wc_y, 0.0f));
+			unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
+			glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
 
 		}	
 	
