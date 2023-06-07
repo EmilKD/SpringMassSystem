@@ -49,8 +49,12 @@ public:
 	vector<Particle> Particles{};
 	int n{ 0 };
 	float time{ 0.0f };
-	float Gravity{ -0.98f };
-	float Drag{ 0.1f };
+	float Gravity{ -9.8f };
+	float Drag{ 0.01f };
+
+	vector<array<int, 2>> SpringParticles{};
+	vector<array<float, 2>> SpringConsts{};
+	vector<float> SpringLengths{};
 
 private:
 

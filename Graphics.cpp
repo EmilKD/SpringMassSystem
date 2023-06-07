@@ -15,7 +15,7 @@ int windowSize_x = 1000;
 int windowSize_y = 1000;
 float wc_x;
 float wc_y;
-static float Scale_x = 0.2;
+static float Scale_x = 0.1;
 static float Scale_y = Scale_x;
 
 // Particle Physics ---------------------------------------------------------------------------------------------------
@@ -54,6 +54,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		cout << "Number of Particles: " << ps.Particles.size() << endl;
 	}
+
 }
 
 static void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
@@ -65,6 +66,17 @@ static void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		
 		Particle p(lastID, 1.0f, &pos);
 		ps.AddParticle(&p);
+	}
+
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
+	{
+		array<float, 3> pos{ wc_x, wc_y, 0};
+		int lastID = ps.Particles.size();
+
+		Particle p(lastID, 1.0f, &pos);
+		ps.AddParticle(&p);
+
+		ps.SpringParticles.push_back({ {0, lastID} });
 	}
 }
 
@@ -155,6 +167,9 @@ void GraphicalObj::DrawShape()
 // Main -----------------------------------------------------------------------------------------------------------------------------------
 int main()
 {
+	Particle p0(0);
+	ps.AddParticle(&p0);
+
 	// GLFW initialization ----------------------------------------------------------------------------------
 	glfwInit();
 	// setting window hints aka OpenGL version and profile
@@ -163,7 +178,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// setting up the window and error handling
-	GLFWwindow* window = glfwCreateWindow(windowSize_x, windowSize_y, "HelloWorld", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(windowSize_x, windowSize_y, "PDBSolver", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "window failed to Initialize";
@@ -196,7 +211,7 @@ int main()
 
 	// Texture Generation --------------------------------------------------------------------------------------------
 	
-	MainShader.CreateTexture(". / Textures / Spring.png", "png");
+	MainShader.CreateTexture(". / Textures / GlowDot.png", "png");
 	
 	
 	// Variables and Objects declaration------------------------------------------------------------------------------
@@ -242,18 +257,19 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		/*
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 		{
-			/* Relic
-			rect = {
-					// Position                                      Color                       Texture Coords
-					wc_x + 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.5f, 0.0f, 0.0f,     1.0f, 1.0f,       //top right
-					wc_x + 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.5f, 0.0f,     1.0f, 0.0f,       //bottom right
-					wc_x - 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.0f, 0.5f,     0.0f, 0.0f,       //bottom left
-					wc_x - 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.25f, 0.25f, 0.0f,    0.0f, 1.0f	   //top left
-			};
-			rectangle.VertexUpdate(&rect, &indices);
-			*/
+			//	Relic
+			//rect = {
+			//		// Position                                      Color                       Texture Coords
+			//		wc_x + 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.5f, 0.0f, 0.0f,     1.0f, 1.0f,       //top right
+			//		wc_x + 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.5f, 0.0f,     1.0f, 0.0f,       //bottom right
+			//		wc_x - 0.1f * Scale_x, wc_y - 0.1f * Scale_y,    0.0f, 0.0f, 0.0f, 0.5f,     0.0f, 0.0f,       //bottom left
+			//		wc_x - 0.1f * Scale_x, wc_y + 0.1f * Scale_y,    0.0f, 0.25f, 0.25f, 0.0f,    0.0f, 1.0f	   //top left
+			//};
+			//rectangle.VertexUpdate(&rect, &indices);
+			
 
 			trans = glm::mat4(1.0f);
 			trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
@@ -262,33 +278,32 @@ int main()
 			glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
 
 		}	
-		
+		*/
 		
 		// Physics Sim
 		time = glfwGetTime();
-		if ((time - previousTime) > 0.01 || true)
+		if ((time - previousTime) > 0.01)
 		{
 			DeltaT = time - previousTime;
 
 			EulerSolver(&ps, DeltaT);
-			GetParticleState(&ps, &test);
-			for (float e : test)
-				cout << e << endl;
-			cout << endl;
 
-			previousTime = time;
 
 			if (!ps.Particles.empty())
 			{
-				trans = glm::mat4(1.0f);
-				trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
-				trans = glm::translate(trans, glm::vec3(ps.Particles[0].p[0], ps.Particles[0].p[1], 0.0f));
-				unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
-				glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
-				rectangle.BufferUpdate();
-				rectangle.DrawShape();
+				for (int i = 0; i < ps.n; ++i) 
+				{
+					trans = glm::mat4(1.0f);
+					trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
+					trans = glm::translate(trans, glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f));
+					unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
+					glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
+					rectangle.BufferUpdate();
+					rectangle.DrawShape();
+				}
 			}
 		}
+		previousTime = time;
 		//cout << time << endl;
 
 		
