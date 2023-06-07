@@ -1,33 +1,30 @@
 #include <iostream>
 #include "PDB.h"
-
-// Global Variables --------------------------------------------------------------------------------------------
-
-vector<array<int, 2>> SpringParticles{};
-vector<array<float, 2>> SpringConsts{};
-vector<array<float, 3>> SpringLengths{};
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+#include<glm/gtx/norm.hpp>
 
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks, float kd, array<float, 3> l0)
+void SpringForce(Particle* p1, Particle* p2, float ks = 5.0f, float kd = 0.2f, float l0 = 1.0f)
 {
-	float p120 = p1->p[0] - p2->p[0];
-	float p121 = p1->p[1] - p2->p[1];
-	float p122 = p1->p[2] - p2->p[2];
-	float v120 = p1->v[0] - p2->v[0];
-	float v121 = p1->v[1] - p2->v[1];
-	float v122 = p1->v[2] - p2->v[2];
+	glm::vec3 pos1{p1->p[0], p1->p[1], 0};
+	glm::vec3 pos2{p2->p[0], p2->p[1], 0};
+	glm::vec3 pos12 = pos2 - pos1;
+	float pmag = glm::length(pos12);
+	glm::vec3 vel1{p1->v[0], p1->v[1], 0};
+	glm::vec3 vel2{p2->v[0], p2->v[1], 0};
+	glm::vec3 vel12 = vel2 - vel1;
 
-	float f10 = -(ks * (abs(p120) - l0[0]) + kd * abs(v120));
-	float f11 = -(ks * (abs(p121) - l0[1]) + kd * abs(v121));
-	float f12 = -(ks * (abs(p122) - l0[2]) + kd * abs(v122));
+	glm::vec3 spring_force = (ks * abs((pmag - l0)) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
 
-	p1->f[0] += f10;
-	p1->f[1] += f11;
-	p1->f[2] += f12;
-	p2->f[0] += -f10;
-	p2->f[1] += -f11;
-	p2->f[2] += -f12;
+	p1->f[0] += spring_force[0];
+	p1->f[1] += spring_force[1];
+	p1->f[2] += spring_force[2];
+	p2->f[0] -= spring_force[0];
+	p2->f[1] -= spring_force[1];
+	p2->f[2] -= spring_force[2];
 }
 
 
@@ -47,9 +44,9 @@ void ParticleSystem::AddParticle(Particle* p)
 
 void ParticleSystem::ClearForces()
 {
-	for(Particle p: Particles)
+	for(int i=0; i<n; ++i)
 	{
-		p.f = { 0.0f,0.0f,0.0f };
+		Particles[i].f = {0.0f,0.0f,0.0f};
 	}
 }
 
@@ -59,16 +56,13 @@ void ParticleSystem::CalculateForces()
 	{
 		Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
 	}
-	/*
+	
 	for(int i=0; i<int(SpringParticles.size()); ++i)
 	{
-		SpringForce(&Particles[SpringParticles[i][0]], 
-			&Particles[SpringParticles[i][1]], 
-			SpringConsts[i][0], 
-			SpringConsts[i][1], 
-			SpringLengths[i]);
+		SpringForce(&Particles[SpringParticles[i][0]],
+			&Particles[SpringParticles[i][1]]);
 	}
-	*/
+	
 }
 
 
@@ -93,7 +87,7 @@ void GetParticleState(const ParticleSystem* ps, vector<float>* dst)
 
 void SetParticleState(ParticleSystem* ps, vector<float>* src)
 {
-	for (int i=0; i < ps->n; ++i)
+	for (int i=1; i < ps->n; ++i)
 	{
 		ps->Particles[i].p[0] = src->at(6 * i);
 		ps->Particles[i].p[1] = src->at(6 * i + 1);
