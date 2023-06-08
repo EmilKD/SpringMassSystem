@@ -6,6 +6,9 @@
 #include<iostream>
 #include<string_view>
 #include"PDB.h"
+#include<vector>
+
+using std::vector;
 
 class GraphicalObj {
 public:
