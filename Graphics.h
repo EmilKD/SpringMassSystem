@@ -9,14 +9,14 @@
 
 class GraphicalObj {
 public:
-	GLuint VBO, VAO, EBO;
+	GLuint VBO{}, VAO{}, EBO{};
 	GraphicalObj(vector<float>* vertices, vector<int>* indices);
 	~GraphicalObj();
 	void VertexUpdate(vector<float>* vertices, vector<int>* indices);
 	void BufferUpdate();
 	void DrawShape();
 	
-	vector<float> vertexBuffer;
-	vector<int> indexBuffer;
+	vector<float> vertexBuffer{};
+	vector<int> indexBuffer{};
 };
 #endif // !GUI_H

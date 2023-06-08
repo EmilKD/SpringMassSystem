@@ -7,7 +7,7 @@
 
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 5.0f, float kd = 0.2f, float l0 = 1.0f)
+void SpringForce(Particle* p1, Particle* p2, float ks = 5.0f, float kd = 0.4f, float l0 = 0.5f)
 {
 	glm::vec3 pos1{p1->p[0], p1->p[1], 0};
 	glm::vec3 pos2{p2->p[0], p2->p[1], 0};
@@ -18,6 +18,9 @@ void SpringForce(Particle* p1, Particle* p2, float ks = 5.0f, float kd = 0.2f, f
 	glm::vec3 vel12 = vel2 - vel1;
 
 	glm::vec3 spring_force = (ks * abs((pmag - l0)) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
+
+	// Print out the forces
+	//std::cout << glm::length(spring_force) << std::endl;
 
 	p1->f[0] += spring_force[0];
 	p1->f[1] += spring_force[1];

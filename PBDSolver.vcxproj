@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="PDB.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Shader.cpp" />
