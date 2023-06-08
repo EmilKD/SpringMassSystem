@@ -1,6 +1,10 @@
 #ifndef PDB_H
 #define PDB_H
 
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+#include<glm/gtx/norm.hpp>
 #include<array>
 #include<vector>
 
@@ -50,7 +54,7 @@ public:
 	int n{ 0 };
 	float time{ 0.0f };
 	float Gravity{ -9.8f };
-	float Drag{ 0.01f };
+	float Drag{ 0.001f };
 
 	vector<array<int, 2>> SpringParticles{};
 	vector<array<float, 2>> SpringConsts{};

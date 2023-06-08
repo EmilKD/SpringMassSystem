@@ -1,10 +1,5 @@
 #include"Graphics.h"
 #include"Shader.h"
-#include<glm/glm.hpp>
-#include<glm/gtc/matrix_transform.hpp>
-#include<glm/gtc/type_ptr.hpp>
-
-
 
 // Variables and Objects declaration-----------------------------------------------------------------------------------
 int windowSize_x = 1000;
