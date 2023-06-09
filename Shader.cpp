@@ -2,7 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include"stb_image.h"
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader()
 {
 	std::string vertexCode;
 	std::string fragmentCode;
@@ -14,8 +14,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     try
     {
         // open files
-        vShaderFile.open(vertexPath);
-        fShaderFile.open(fragmentPath);
+        vShaderFile.open("./Shader.vs");
+        fShaderFile.open("./Shader.fs");
         std::stringstream vShaderStream, fShaderStream;
         // read file's buffer contents into streams
         vShaderStream << vShaderFile.rdbuf();

@@ -1,13 +1,29 @@
 #include"Graphics.h"
 #include"Shader.h"
 
+using std::cout, std::endl, std::vector, std::array;
+
+// Particle Physics ---------------------------------------------------------------------------------------------------
+ParticleSystem ps;
+
 // Variables and Objects declaration-----------------------------------------------------------------------------------
+float g_xpos, g_ypos;
+bool left_mouse_button;
+
 int windowSize_x = 1000;
 int windowSize_y = 1000;
 float wc_x;
 float wc_y;
+
 float Scale_x = 0.1f;
 float Scale_y = Scale_x;
+
+double previousTime{ 0.0 };
+double DeltaT{ 0.0 };
+double runtime{ 0.0 };
+
+vector<float> test{};
+glm::mat4 trans = glm::mat4(1.0f);
 
 vector<float> vertices = {
 	0.5f, -0.5f, 0.0f,    0.5f, 0.0f, 0.0f,     1.0f, 0.0f,
@@ -28,32 +44,72 @@ vector<int> indices = {
 	1, 2, 3,
 };
 
-void cursor_pos_callBack(GLFWwindow* window, double xpos, double ypos);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void process_input(GLFWwindow* window);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_clicked(GLFWwindow* window, int button, int action, int mod);
 void GetParticleState(const ParticleSystem* ps, vector<float>* dst);
 void EulerSolver(ParticleSystem* ps, float DeltaT);
 
+// CallBacks ----------------------------------------------------------------------------------------------------------
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
 
+void process_input(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+}
 
-double previousTime{ 0.0 };
-double DeltaT{ 0.0 };
-double runtime{ 0.0 };
+void cursor_pos_callBack(GLFWwindow* window, double xpos, double ypos)
+{
+	g_xpos = xpos;
+	g_ypos = ypos;
+	wc_x = (2 * (xpos / windowSize_x) - 1) / Scale_x;
+	wc_y = (-2 * (ypos / windowSize_y) + 1) / Scale_y;
+}
 
-vector<float> test{};
-glm::mat4 trans = glm::mat4(1.0f);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+	{
+		cout << endl;
+		for (Particle p : ps.Particles)
+		{
+			cout << "Particle #" << p.ID << " pos: " << "x:" << p.p[0] << " y:" << p.p[1] << " z:" << p.p[2] << endl << endl;
+		}
+		cout << "Number of Particles: " << ps.Particles.size() << endl;
+	}
 
-// Particle Physics ---------------------------------------------------------------------------------------------------
-ParticleSystem ps;
+}
+
+void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
+{
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
+	{
+		array<float, 3> pos{ wc_x, wc_y, 0};
+		int lastID = ps.Particles.size();
+
+		Particle p(lastID, 1.0f, &pos);
+		ps.AddParticle(&p);
+	}
+
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
+	{
+		array<float, 3> pos{ wc_x, wc_y, 0};
+		int lastID = ps.Particles.size();
+
+		Particle p(lastID, 1.0f, &pos);
+		ps.AddParticle(&p);
+
+		ps.SpringParticles.push_back({ {0, lastID} });
+	}
+}
 
 
 // Main ---------------------------------------------------------------------------------------------------------------
 int main()
 {
-	
-
 	Particle p0(0);
 	ps.AddParticle(&p0);
 
@@ -92,18 +148,18 @@ int main()
 	glfwSetKeyCallback(window, key_callback);
 
 
-	// Graphical Objects Declaration ----------------------------------------------------------------------------------
-	GraphicalObj rectangle(&rect, &indices);
-	GraphicalObj triangle(&vertices, NULL);
+	
 
 	// Shader Compilation ---------------------------------------------------------------------------------------------
-	Shader MainShader("./Shader.vs", "./Shader.fs");
+	Shader MainShader;
 	MainShader.use();
 
 	// Texture Generation ---------------------------------------------------------------------------------------------
 	MainShader.CreateTexture(". / Textures / GlowDot.png", "png");
 
-	
+	// Graphical Objects Declaration ----------------------------------------------------------------------------------
+	GraphicalObj rectangle(MainShader);
+	int timer{0};
 
 	// Program Loop ---------------------------------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
@@ -131,7 +187,8 @@ int main()
 		// Particle Physics Solver and Rendering
 		runtime = glfwGetTime();
 		DeltaT = runtime - previousTime;
-		if (DeltaT > 0.005)
+
+		//if (DeltaT > 0.005)
 		{
 			previousTime = runtime;
 
@@ -141,16 +198,19 @@ int main()
 			{
 				for (int i = 0; i < ps.n; ++i)
 				{
-					trans = glm::mat4(1.0f);
-					trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
-					trans = glm::translate(trans, glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f));
-					unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
-					glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
+					rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
 					rectangle.BufferUpdate();
 					rectangle.DrawShape();
 				}
 			}
 		}
+		if (timer > 500)
+		{
+			//system("CLS");
+			cout << "FPS: " << 1 / DeltaT << endl;
+			timer = 0;
+		}
+		++timer;
 	}
 
 	// Unbinding and closing all glfw windows and clearing opbjects
