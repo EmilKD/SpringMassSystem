@@ -11,22 +11,21 @@
 using std::vector;
 
 class GraphicalObj {
+
 public:
 	GraphicalObj(Shader &shader);
 	~GraphicalObj();
-
 	void VertexUpdate(vector<float>* vertices, vector<int>* indices);
 	void BufferUpdate();
-	void DrawShape();
-
+	void DrawShape(glm::vec3 color);
 	void transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate, glm::vec3 rotAxis);
 	
 	vector<float> vertexBuffer = {
 		// Postition             Colors                   Texture Coords
-		0.5f, 0.5f, 0.0f,        0.5f, 0.0f, 0.0f,        1.0f, 1.0f,          //top right
-		0.5f, -0.5f, 0.0f,       0.0f, 0.5f, 0.0f,        1.0f, 0.0f,          //bottom right
-		-0.5f, -0.5f, 0.0f,      0.0f, 0.0f, 0.5f,        0.0f, 0.0f,          //bottom left
-		-0.5f, 0.5f, 0.0f,       0.25f, 0.25f, 0.0f,      0.0f, 1.0f           //top left
+		0.5f, 0.5f, 0.0f,        0.0f, 0.0f, 0.0f,        1.0f, 1.0f,          //top right
+		0.5f, -0.5f, 0.0f,       0.0f, 0.0f, 0.0f,        1.0f, 0.0f,          //bottom right
+		-0.5f, -0.5f, 0.0f,      0.0f, 0.0f, 0.0f,        0.0f, 0.0f,          //bottom left
+		-0.5f, 0.5f, 0.0f,       0.0f, 0.0f, 0.0f,      0.0f, 1.0f           //top left
 	};
 
 	vector<int> indexBuffer = {

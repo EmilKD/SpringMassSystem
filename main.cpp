@@ -12,36 +12,28 @@ bool left_mouse_button;
 
 int windowSize_x = 1000;
 int windowSize_y = 1000;
+array<int, 2> windowSize{1000, 1000};
 float wc_x;
 float wc_y;
 
-float Scale_x = 0.1f;
+float Scale_x = 0.05f;
 float Scale_y = Scale_x;
 
 double previousTime{ 0.0 };
 double DeltaT{ 0.0 };
 double runtime{ 0.0 };
+int timer{ 0 };
 
-vector<float> test{};
-glm::mat4 trans = glm::mat4(1.0f);
-
-vector<float> vertices = {
-	0.5f, -0.5f, 0.0f,    0.5f, 0.0f, 0.0f,     1.0f, 0.0f,
-	-0.5f, -0.5f, 0.0f,   0.0f, 0.5f, 0.0f,     0.0f, 0.0f,
-	0.0f, 0.5f, 0.0f,     0.0f, 0.0f, 0.5f,     0.5f, 1.0f
+enum ObjectType
+{
+	Mass,
+	Spring
 };
 
-vector<float> rect = {
-	// Postition             Colors                   Texture Coords
-	0.5f, 0.5f, 0.0f,        0.5f, 0.0f, 0.0f,        1.0f, 1.0f,          //top right
-	0.5f, -0.5f, 0.0f,       0.0f, 0.5f, 0.0f,        1.0f, 0.0f,          //bottom right
-	-0.5f, -0.5f, 0.0f,      0.0f, 0.0f, 0.5f,        0.0f, 0.0f,          //bottom left
-	-0.5f, 0.5f, 0.0f,       0.25f, 0.25f, 0.0f,      0.0f, 1.0f           //top left
-};
-
-vector<int> indices = {
-	0, 1, 3,
-	1, 2, 3,
+struct Colors
+{
+	glm::vec3 Amber{glm::vec3(1.0f, 0.75f, 0.0f)};
+	glm::vec3 White{glm::vec3(1.0f, 1.0f, 1.0f)};
 };
 
 void GetParticleState(const ParticleSystem* ps, vector<float>* dst);
@@ -121,7 +113,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// setting up the window and error handling
-	GLFWwindow* window = glfwCreateWindow(windowSize_x, windowSize_y, "PDBSolver", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(windowSize[0], windowSize[1], "PDBSolver", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "window failed to Initialize";
@@ -140,26 +132,16 @@ int main()
 	// CallBacks ------------------------------------------------------------------------------------------------------
 	// updating viewport size if window size is changed CallBack
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	// Mouse Position CallBack
 	glfwSetCursorPosCallback(window, cursor_pos_callBack);
-	// Mouse Button Pressed Callback
 	glfwSetMouseButtonCallback(window, mouse_clicked);
-	// SpaceBar CallBack
 	glfwSetKeyCallback(window, key_callback);
-
-
-	
 
 	// Shader Compilation ---------------------------------------------------------------------------------------------
 	Shader MainShader;
-	MainShader.use();
-
-	// Texture Generation ---------------------------------------------------------------------------------------------
-	MainShader.CreateTexture(". / Textures / GlowDot.png", "png");
 
 	// Graphical Objects Declaration ----------------------------------------------------------------------------------
 	GraphicalObj rectangle(MainShader);
-	int timer{0};
+	Colors color;
 
 	// Program Loop ---------------------------------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window))
@@ -172,17 +154,6 @@ int main()
 		glfwPollEvents();
 		glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-		/* Moving the Drawn Object with Mouse
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
-		{
-			trans = glm::mat4(1.0f);
-			trans = glm::scale(trans, glm::vec3(Scale_x, Scale_y, 1.0f));
-			trans = glm::translate(trans, glm::vec3(wc_x, wc_y, 0.0f));
-			unsigned int transLocation = glGetUniformLocation(MainShader.ID, "transform");
-			glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(trans));
-		}
-		*/
 
 		// Particle Physics Solver and Rendering
 		runtime = glfwGetTime();
@@ -198,12 +169,25 @@ int main()
 			{
 				for (int i = 0; i < ps.n; ++i)
 				{
-					rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
-					rectangle.BufferUpdate();
-					rectangle.DrawShape();
+
+					
+					
+					if (i == 0)
+					{
+						rectangle.transform(glm::vec3(Scale_x*2.0f, Scale_y*2.0f, 1.0f), glm::vec3(ps.Particles[0].p[0], ps.Particles[0].p[1], 0.0f), 30, glm::vec3(1.0f));
+						rectangle.DrawShape(color.Amber);
+
+					}
+
+					else
+					{
+						rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
+						rectangle.DrawShape(color.White);
+					}
 				}
 			}
 		}
+
 		if (timer > 500)
 		{
 			//system("CLS");

@@ -1,7 +1,7 @@
 #include "PDB.h"
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 5.0f, float kd = 0.1f, float l0 = 0.5f)
+void SpringForce(Particle* p1, Particle* p2, float ks = 50.0f, float kd = 0.1f, float l0 = 0.5f)
 {
 	glm::vec3 pos1{p1->p[0], p1->p[1], 0};
 	glm::vec3 pos2{p2->p[0], p2->p[1], 0};

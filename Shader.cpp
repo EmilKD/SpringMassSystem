@@ -56,6 +56,7 @@ Shader::Shader()
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
+    CreateTexture("./Textures/GlowDot_500px.png", "png");
 }
 
 void Shader::use()
@@ -78,7 +79,7 @@ void Shader::CreateTexture(const char* filePath, string fileFormat)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // load and generate the texture
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("./Textures/GlowDot.png", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -105,6 +106,10 @@ void Shader::setInt(const string& name, int value) const
 void Shader::setFloat(const string& name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::set3fv(const string& name, glm::vec3 value) const
+{
+    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
 }
 
 void Shader::checkCompileErrors(unsigned int shader, std::string type)
