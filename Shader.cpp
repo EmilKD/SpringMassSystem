@@ -56,7 +56,7 @@ Shader::Shader()
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
-    CreateTexture("./Textures/GlowDot_500px.png", "png");
+    CreateTexture("./Textures/GlowDotFilled.png", "png");
 }
 
 void Shader::use()

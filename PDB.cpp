@@ -1,27 +1,20 @@
 #include "PDB.h"
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 50.0f, float kd = 0.1f, float l0 = 0.5f)
+void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.01f, float l0 = 0.5f)
 {
-	glm::vec3 pos1{p1->p[0], p1->p[1], 0};
-	glm::vec3 pos2{p2->p[0], p2->p[1], 0};
-	glm::vec3 pos12 = pos2 - pos1;
+	glm::vec3 pos12 = p1->p - p2->p;
 	float pmag = glm::length(pos12);
-	glm::vec3 vel1{p1->v[0], p1->v[1], 0};
-	glm::vec3 vel2{p2->v[0], p2->v[1], 0};
-	glm::vec3 vel12 = vel2 - vel1;
+
+	glm::vec3 vel12 = p1->v - p2->v;
 
 	glm::vec3 spring_force = (ks * abs((pmag - l0)) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
 
 	// Print out the forces
 	//std::cout << glm::length(spring_force) << std::endl;
 
-	p1->f[0] += spring_force[0];
-	p1->f[1] += spring_force[1];
-	p1->f[2] += spring_force[2];
-	p2->f[0] -= spring_force[0];
-	p2->f[1] -= spring_force[1];
-	p2->f[2] -= spring_force[2];
+	p1->f -= spring_force;
+	p2->f += spring_force;
 }
 
 
@@ -49,6 +42,8 @@ void ParticleSystem::ClearForces()
 
 void ParticleSystem::CalculateForces()
 {
+
+	// For Loops could be optimized by turing into matrix operations 
 	for (int i{0}; i<Particles.size(); ++i)
 	{
 		Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
@@ -78,20 +73,16 @@ void GetParticleState(const ParticleSystem* ps, vector<float>* dst)
 		dst->push_back(p.p[2]);
 		dst->push_back(p.v[0]);
 		dst->push_back(p.v[1]);
-		dst->push_back(p.p[2]);
+		dst->push_back(p.v[2]);
 	}
 }
 
 void SetParticleState(ParticleSystem* ps, vector<float>* src)
 {
-	for (int i=1; i < ps->n; ++i)
+	for (int i = 1; i < ps->n; ++i)
 	{
-		ps->Particles[i].p[0] = src->at(6 * i);
-		ps->Particles[i].p[1] = src->at(6 * i + 1);
-		ps->Particles[i].p[2] = src->at(6 * i + 2);
-		ps->Particles[i].v[0] = src->at(6 * i + 3);
-		ps->Particles[i].v[1] = src->at(6 * i + 4);
-		ps->Particles[i].v[2] = src->at(6 * i + 5);
+		ps->Particles[i].p = { src->at(6 * i), src->at(6 * i + 1), src->at(6 * i + 2) };
+		ps->Particles[i].v = { src->at(6 * i + 3), src->at(6 * i + 4), src->at(6 * i + 5) };
 	}
 }
 
