@@ -16,7 +16,7 @@ class Shader
 {
 public:
 	unsigned int ID;
-	Shader(const char* vertexPath, const char* fragmentPath);
+	Shader();
 	void use();
 	void CreateTexture(const char* filePath, string fileFormat);
 	void setBool(const string &name, bool value) const;
