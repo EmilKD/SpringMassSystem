@@ -1,12 +1,11 @@
 #include"Graphics.h"
 
+
 // Graphical Object Class Functions -----------------------------------------------------------------------------------
 GraphicalObj::GraphicalObj(Shader &shader)
 {	
 	this->shader = shader;
-	glGenBuffers(1, &this->VBO);
-	glGenVertexArrays(1, &this->VAO);
-	glGenBuffers(1, &this->EBO);
+	BufferUpdate();
 }
 
 GraphicalObj::~GraphicalObj()
@@ -31,6 +30,10 @@ void GraphicalObj::VertexUpdate(vector<float>*vertices, vector<int>*indices = NU
 
 void GraphicalObj::BufferUpdate()
 {
+	glGenBuffers(1, &this->VBO);
+	glGenVertexArrays(1, &this->VAO);
+	glGenBuffers(1, &this->EBO);
+
 	glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertexBuffer.size() * sizeof(float), static_cast<const void*>(vertexBuffer.data()), GL_STATIC_DRAW);
 
@@ -50,22 +53,28 @@ void GraphicalObj::BufferUpdate()
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
-
 	
 }
 
-void GraphicalObj::DrawShape()
+void GraphicalObj::DrawShape(glm::vec3 color)
 {
+	this->shader.use();
+	
+	// Setting the Color
+	this->shader.set3fv("myColor", color);
+
 	if (!indexBuffer.empty())
 	{
 		glBindVertexArray(this->VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 	else
 	{
 		glBindVertexArray(this->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(0);
 	}
 }
 

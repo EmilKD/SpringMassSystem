@@ -3,12 +3,14 @@
 #define SHADER_H
 
 #include<glad/glad.h>
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 #include<string>
 #include<istream>
 #include<fstream>
 #include<sstream>
 #include<iostream>
-
 
 using std::string;
 
@@ -22,6 +24,7 @@ public:
 	void setBool(const string &name, bool value) const;
 	void setInt(const string& name, int value) const;
 	void setFloat(const string& name, float value) const;
+	void set3fv(const string& name, glm::vec3 value) const;
 
 private:
 	void checkCompileErrors(unsigned int shader, string type);
