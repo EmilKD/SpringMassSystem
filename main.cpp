@@ -79,19 +79,27 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 {
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 	{
-		array<float, 3> pos{ wc_x, wc_y, 0};
+		glm::vec3 pos{wc_x, wc_y, 0};
+		glm::float32 velMag = 10;
+		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
+		
+
 		int lastID = ps.Particles.size();
 
-		Particle p(lastID, 1.0f, &pos);
+		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 	}
 
 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
 	{
-		array<float, 3> pos{ wc_x, wc_y, 0};
+		glm::vec3 pos{ wc_x, wc_y, 0};
+		glm::float32 velMag = 10;
+		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
+		
+
 		int lastID = ps.Particles.size();
 
-		Particle p(lastID, 1.0f, &pos);
+		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 
 		ps.SpringParticles.push_back({ {0, lastID} });
