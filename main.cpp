@@ -127,8 +127,12 @@ int main()
 		std::cout << "window failed to Initialize";
 		return -1;
 	}
+
 	// setting the window as OpendGl's current context
 	glfwMakeContextCurrent(window);
+
+	//Turning VSync Off! :/
+	glfwSwapInterval(0);
 
 	// glad loading error handling
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
