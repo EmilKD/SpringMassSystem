@@ -7,6 +7,7 @@
 #include<glm/gtx/norm.hpp>
 #include<array>
 #include<vector>
+#include<iostream>
 
 using std::vector;
 using std::array;
@@ -47,9 +48,13 @@ public:
 	void AddParticle(Particle* p);
 	void ClearForces();
 	void CalculateForces();
-	//void SetParticleStates(const ParticleSystem* ps, vector<float>* src);
-	//void GetParticleStates(const ParticleSystem* ps, vector<float>* dst);
-	//void ParticleDerivative(ParticleSystem ps, array<float, 6> dst);
+	int ParticleDim();
+	void SetParticleState(vector<float>* src);
+	void GetParticleState(vector<float>* dst) const;
+	void ParticleDerivative(vector<float>* dst);
+	void ScaleUp(vector<float>* v1, vector<float>* v2, float h);
+	void CollisionDetect();
+	void EulerSolve(float DeltaT);
 
 	vector<Particle> Particles{};
 	int n{ 0 };
