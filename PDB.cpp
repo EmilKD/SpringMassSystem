@@ -59,14 +59,14 @@ void ParticleSystem::CalculateForces()
 
 
 // ODE Solver --------------------------------------------------------------------------------------------------------------------------------------
-int ParticleDim(const ParticleSystem* ps)
+int ParticleSystem::ParticleDim()
 {
-	return 6 * ps->n;
+	return 6 * this->n;
 }
 
-void GetParticleState(const ParticleSystem* ps, vector<float>* dst)
+void ParticleSystem::GetParticleState(vector<float>* dst) const
 {
-	for(Particle p: ps->Particles)
+	for(Particle p: this->Particles)
 	{
 		dst->push_back(p.p[0]);
 		dst->push_back(p.p[1]);
@@ -77,21 +77,21 @@ void GetParticleState(const ParticleSystem* ps, vector<float>* dst)
 	}
 }
 
-void SetParticleState(ParticleSystem* ps, vector<float>* src)
+void ParticleSystem::SetParticleState(vector<float>* src)
 {
-	for (int i = 1; i < ps->n; ++i)
+	for (int i = 1; i < this->n; ++i)
 	{
-		ps->Particles[i].p = { src->at(6 * i), src->at(6 * i + 1), src->at(6 * i + 2) };
-		ps->Particles[i].v = { src->at(6 * i + 3), src->at(6 * i + 4), src->at(6 * i + 5) };
+		this->Particles[i].p = { src->at(6 * i), src->at(6 * i + 1), src->at(6 * i + 2) };
+		this->Particles[i].v = { src->at(6 * i + 3), src->at(6 * i + 4), src->at(6 * i + 5) };
 	}
 }
 
-void ParticleDerivative(ParticleSystem* ps, vector<float>* dst)
+void ParticleSystem::ParticleDerivative(vector<float>* dst)
 {
-	ps->ClearForces();
-	ps->CalculateForces();
+	this->ClearForces();
+	this->CalculateForces();
 
-	for (Particle p : ps->Particles)
+	for (Particle p : this->Particles)
 	{
 		dst->push_back(p.v[0]);
 		dst->push_back(p.v[1]);
@@ -102,7 +102,7 @@ void ParticleDerivative(ParticleSystem* ps, vector<float>* dst)
 	}
 }
 
-void ScaleUp(vector<float>* v1, vector<float>* v2, float h)
+void ParticleSystem::ScaleUp(vector<float>* v1, vector<float>* v2, float h)
 {
 		for (int i = 0; i<int(v1->size()); ++i)
 		{
@@ -110,17 +110,42 @@ void ScaleUp(vector<float>* v1, vector<float>* v2, float h)
 		}
 }
 
-void EulerSolver(ParticleSystem* ps, float DeltaT)
+void ParticleSystem::CollisionDetect()
+{
+	int counter = 0;
+	float r = 0.5;
+
+	array<float, 2> bounds{15.0f, 15.0f};
+
+
+	for(Particle p: this->Particles)
+	{
+
+		if (p.p[0] >= bounds[0] || p.p[0] <= -bounds[0])
+		{
+			this->Particles[counter].p[0] = bounds[0] * glm::sign(p.p[0]);
+			this->Particles[counter].v[0] = -p.v[0]*r;
+			this->Particles[counter].f[0] -= p.f[0];
+		}
+		if (p.p[1] >= bounds[1] || p.p[1] <= -bounds[1])
+		{
+			this->Particles[counter].p[1] = bounds[1] * glm::sign(p.p[1]);
+			this->Particles[counter].v[1] = -p.v[1]*r;
+			this->Particles[counter].f[1] -= p.f[1];
+		}
+		++counter;
+	}
+}
+
+void ParticleSystem::EulerSolve(float DeltaT)
 {
 	vector<float> temp1{};
 	vector<float> temp2{};
-	GetParticleState(ps, &temp1);
-	ParticleDerivative(ps, &temp2);
+	GetParticleState(&temp1);
+	ParticleDerivative(&temp2);
 	ScaleUp(&temp1, &temp2, DeltaT);
-	SetParticleState(ps, &temp1);
-	ps->time += DeltaT;
+	SetParticleState(&temp1);
+	CollisionDetect();
+	this->time += DeltaT;
 }
 
-// To Do:
-//		Create Solver Class 
-//		Use GLM for calculations

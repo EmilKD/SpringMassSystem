@@ -10,8 +10,6 @@ ParticleSystem ps;
 float g_xpos, g_ypos;
 bool left_mouse_button;
 
-int windowSize_x = 1000;
-int windowSize_y = 1000;
 array<int, 2> windowSize{1000, 1000};
 float wc_x;
 float wc_y;
@@ -57,8 +55,8 @@ void cursor_pos_callBack(GLFWwindow* window, double xpos, double ypos)
 {
 	g_xpos = xpos;
 	g_ypos = ypos;
-	wc_x = (2 * (xpos / windowSize_x) - 1) / Scale_x;
-	wc_y = (-2 * (ypos / windowSize_y) + 1) / Scale_y;
+	wc_x = (2 * (xpos / windowSize[0]) - 1) / Scale_x;
+	wc_y = (-2 * (ypos / windowSize[1]) + 1) / Scale_y;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -80,7 +78,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 	{
 		glm::vec3 pos{wc_x, wc_y, 0};
-		glm::float32 velMag = 10;
+		glm::float32 velMag = 100;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
 
@@ -93,7 +91,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
 	{
 		glm::vec3 pos{ wc_x, wc_y, 0};
-		glm::float32 velMag = 10;
+		glm::float32 velMag = 100;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
 
@@ -175,7 +173,7 @@ int main()
 		{
 			previousTime = runtime;
 
-			EulerSolver(&ps, float(DeltaT));
+			ps.EulerSolve(float(DeltaT));
 
 			if (!ps.Particles.empty())
 			{
