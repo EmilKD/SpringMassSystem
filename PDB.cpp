@@ -1,7 +1,17 @@
 #include "PDB.h"
 
+bool CheckExist(vector<int> base, int value)
+{
+	for(int i=0; i<base.size(); ++i)
+	{
+		if (base[i] == value)
+			return true;
+	}
+	return false;
+}
+
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.01f, float l0 = 0.5f)
+void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.1f, float l0 = 0.5f)
 {
 	glm::vec3 pos12 = p1->p - p2->p;
 	float pmag = glm::length(pos12);
@@ -31,6 +41,24 @@ void ParticleSystem::AddParticle(Particle* p)
 	n = int(Particles.size());
 }
 
+void ParticleSystem::DeleteParticle(unsigned int id)
+{
+	if (this->n > 0)
+	{
+		this->Particles.erase(Particles.begin() + id - 1);
+		std::cout << "Oy, last Particle Killed!" << std::endl;
+
+
+		/*for (int i = 0; i < this->SpringParticles.size(); ++i)
+		{
+			if (this->SpringParticles[i][0] == id || this->SpringParticles[i][1] == id)
+				this->SpringParticles.erase(this->SpringParticles.begin() + i - 1);
+		}*/
+
+		this->n = this->Particles.size();
+	}
+	
+}
 
 void ParticleSystem::ClearForces()
 {
@@ -44,15 +72,17 @@ void ParticleSystem::CalculateForces()
 {
 
 	// For Loops could be optimized by turing into matrix operations 
-	for (int i{0}; i<Particles.size(); ++i)
+	for (int i{ 0 }; i < Particles.size(); ++i)
 	{
 		Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
+
+		// if particle has string
 	}
 	
-	for(int i=0; i<int(SpringParticles.size()); ++i)
+	for (int i{ 0 }; i<SpringParticles.size()/2; ++i)
 	{
-		SpringForce(&Particles[SpringParticles[i][0]],
-			&Particles[SpringParticles[i][1]]);
+		SpringForce(&Particles[SpringParticles[2*i]],
+			&Particles[SpringParticles[2*i + 1]]);
 	}
 	
 }
@@ -79,10 +109,13 @@ void ParticleSystem::GetParticleState(vector<float>* dst) const
 
 void ParticleSystem::SetParticleState(vector<float>* src)
 {
-	for (int i = 1; i < this->n; ++i)
+	for (int i = 0; i < this->n; ++i)
 	{
-		this->Particles[i].p = { src->at(6 * i), src->at(6 * i + 1), src->at(6 * i + 2) };
-		this->Particles[i].v = { src->at(6 * i + 3), src->at(6 * i + 4), src->at(6 * i + 5) };
+		if (!CheckExist(this->Ignoreparticles, i))
+		{
+			this->Particles[i].p = { src->at(6 * i), src->at(6 * i + 1), src->at(6 * i + 2) };
+			this->Particles[i].v = { src->at(6 * i + 3), src->at(6 * i + 4), src->at(6 * i + 5) };
+		}
 	}
 }
 
