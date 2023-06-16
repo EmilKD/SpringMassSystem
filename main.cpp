@@ -78,11 +78,11 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 	{
 		glm::vec3 pos{wc_x, wc_y, 0};
-		glm::float32 velMag = 100;
+		glm::float32 velMag = 0;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
 
-		int lastID = ps.Particles.size();
+		int lastID = ps.n;
 
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
@@ -91,16 +91,17 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
 	{
 		glm::vec3 pos{ wc_x, wc_y, 0};
-		glm::float32 velMag = 100;
+		glm::float32 velMag = 0;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
 
-		int lastID = ps.Particles.size();
+		int lastID = ps.n;
 
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 
-		ps.SpringParticles.push_back({ {0, lastID} });
+		ps.SpringParticles.push_back(lastID - 1);
+		ps.SpringParticles.push_back(lastID);
 	}
 }
 
@@ -108,8 +109,36 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 // Main ---------------------------------------------------------------------------------------------------------------
 int main()
 {
-	Particle p0(0);
+	glm::vec3 pos0, pos1, pos2, pos3;
+	pos0 = glm::vec3(-2, 4, 0);
+	pos1 = glm::vec3(2, 4, 0);
+	pos2 = glm::vec3(-2, 2, 0);
+	pos3 = glm::vec3(2, 2, 0);
+
+	Particle p0(0, 1.0f, &pos0);
 	ps.AddParticle(&p0);
+	Particle p1(1, 1.0f, &pos1);
+	ps.AddParticle(&p1);
+	Particle p2(2, 1.0f, &pos2);
+	ps.AddParticle(&p2);
+	Particle p3(3, 1.0f, &pos3);
+	ps.AddParticle(&p3);
+
+	ps.Ignoreparticles.push_back(0);
+	ps.Ignoreparticles.push_back(1);
+
+	ps.SpringParticles.push_back(0);
+	ps.SpringParticles.push_back(1);
+	ps.SpringParticles.push_back(0);
+	ps.SpringParticles.push_back(2);
+	ps.SpringParticles.push_back(0);
+	ps.SpringParticles.push_back(3);
+	ps.SpringParticles.push_back(1);
+	ps.SpringParticles.push_back(2);
+	ps.SpringParticles.push_back(1);
+	ps.SpringParticles.push_back(3);
+	ps.SpringParticles.push_back(2);
+	ps.SpringParticles.push_back(3);
 
 	// GLFW initialization --------------------------------------------------------------------------------------------
 	glfwInit();
@@ -148,6 +177,7 @@ int main()
 
 	// Shader Compilation ---------------------------------------------------------------------------------------------
 	Shader MainShader;
+	
 
 	// Graphical Objects Declaration ----------------------------------------------------------------------------------
 	GraphicalObj rectangle(MainShader);
@@ -179,17 +209,14 @@ int main()
 			{
 				for (int i = 0; i < ps.n; ++i)
 				{
-
-					
-					
-					if (i == 0)
+					/*if (i == 0)
 					{
 						rectangle.transform(glm::vec3(Scale_x*2.0f, Scale_y*2.0f, 1.0f), glm::vec3(ps.Particles[0].p[0], ps.Particles[0].p[1], 0.0f), 30, glm::vec3(1.0f));
 						rectangle.DrawShape(color.Amber);
 
-					}
+					}*/
 
-					else
+					//else
 					{
 						rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
 						rectangle.DrawShape(color.White);
@@ -198,10 +225,16 @@ int main()
 			}
 		}
 
-		if (timer > 500)
+		//if (timer > 500)
+		//{
+		//	//system("CLS");
+		//	cout << "FPS: " << 1 / DeltaT << endl;
+		//	timer = 0;
+		//}
+
+		if (timer > 5000)
 		{
-			//system("CLS");
-			cout << "FPS: " << 1 / DeltaT << endl;
+			//ps.DeleteParticle(ps.n);
 			timer = 0;
 		}
 		++timer;

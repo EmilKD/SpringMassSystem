@@ -46,6 +46,7 @@ class ParticleSystem
 public:
 	ParticleSystem();
 	void AddParticle(Particle* p);
+	void DeleteParticle(unsigned int id);
 	void ClearForces();
 	void CalculateForces();
 	int ParticleDim();
@@ -60,11 +61,12 @@ public:
 	int n{ 0 };
 	float time{ 0.0f };
 	float Gravity{ -9.83f };
-	float Drag{ 0.01f };
+	float Drag{ 0.1f };
 
-	vector<array<int, 2>> SpringParticles{};
-	vector<array<float, 2>> SpringConsts{};
+	vector<int> SpringParticles{};
+	vector<float> SpringConsts{};
 	vector<float> SpringLengths{};
+	vector<int> Ignoreparticles{};
 
 private:
 

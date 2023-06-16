@@ -1,10 +1,2 @@
-﻿  PDB.cpp
-  main.cpp
-E:\projects\PBD\main.cpp(56,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-E:\projects\PBD\main.cpp(57,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-E:\projects\PBD\main.cpp(58,42): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-E:\projects\PBD\main.cpp(59,43): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-E:\projects\PBD\main.cpp(85,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-E:\projects\PBD\main.cpp(98,14): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-  Generating Code...
-  PBDSolver.vcxproj -> E:\projects\PBD\x64\Debug\PBDSolver.exe
+﻿  Graphics.cpp
+  PBDSolver.vcxproj -> D:\Project\PBD\x64\Debug\PBDSolver.exe
