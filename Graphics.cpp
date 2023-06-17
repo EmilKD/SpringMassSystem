@@ -80,11 +80,12 @@ void GraphicalObj::DrawShape(glm::vec3 color)
 }
 
 
-void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate, glm::vec3 rotAxis)
+void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate)
 {
 	this->model = glm::mat4(1.0f);
 	this->model = glm::scale(this->model, scale);
 	this->model = glm::translate(this->model, translate);
+	this->model = glm::rotate(this->model, rotate, glm::vec3(0.0f, 0.0f, 1.0f));
 	unsigned int transLocation = glGetUniformLocation(this->Objshader.ID, "transform");
 	glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(this->model));
 }

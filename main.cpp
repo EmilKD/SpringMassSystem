@@ -90,7 +90,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
 	{
 		glm::vec3 pos{ wc_x, wc_y, 0};
-		glm::float32 velMag = 0;
+		glm::float32 velMag = 10;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
 		int lastID = ps.n;
@@ -100,6 +100,8 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 
 		ps.SpringParticles.push_back(lastID - 1);
 		ps.SpringParticles.push_back(lastID);
+
+		// Add Spring Constants
 	}
 }
 
@@ -219,7 +221,7 @@ int main()
 
 					//else
 					{
-						rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
+						rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f));
 						rectangle.DrawShape(color.White);
 					}
 				}
@@ -229,13 +231,16 @@ int main()
 					SpringShape.getShader().use();
 					for (int i{ 0 }; i < ps.SpringParticles.size() / 2; ++i)
 					{
+
+						glm::vec3 deltap = ps.Particles[ps.SpringParticles[2 * i + 1]].p - ps.Particles[ps.SpringParticles[2 * i]].p;
 						SpringShape.transform(
 							glm::vec3(Scale_x, Scale_y, 1.0f),
 							glm::vec3(
-								(ps.Particles[ps.SpringParticles[2*i]].p[0] + ps.Particles[ps.SpringParticles[2*i+1]].p[0]) / 2.0f, 
-								(ps.Particles[ps.SpringParticles[2*i]].p[1] + ps.Particles[ps.SpringParticles[2*i+1]].p[1]) / 2.0f, 0.0f),
-							30,
-							glm::vec3(1.0f));
+								(ps.Particles[ps.SpringParticles[2 * i]].p[0] + ps.Particles[ps.SpringParticles[2 * i + 1]].p[0]) / 2.0f, 
+								(ps.Particles[ps.SpringParticles[2 * i]].p[1] + ps.Particles[ps.SpringParticles[2 * i + 1]].p[1]) / 2.0f, 
+								0.0f),
+							-glm::atan(deltap[0]/deltap[1]));
+
 						SpringShape.DrawShape(color.White);
 						glBindTexture(GL_TEXTURE_2D, 0);
 					}
