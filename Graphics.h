@@ -18,7 +18,7 @@ public:
 	void VertexUpdate(vector<float>* vertices, vector<int>* indices);
 	void BufferUpdate();
 	void DrawShape(glm::vec3 color);
-	void transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate, glm::vec3 rotAxis);
+	void transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate = 0.0f);
 	Shader getShader();
 
 	vector<float> vertexBuffer = {

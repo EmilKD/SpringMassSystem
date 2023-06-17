@@ -11,7 +11,7 @@ bool CheckExist(vector<int> base, int value)
 }
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.1f, float l0 = 4.0f)
+void SpringForce(Particle* p1, Particle* p2, float ks = 100.0f, float kd = 10.0f, float l0 = 4.0f)
 {
 	glm::vec3 pos12 = p1->p - p2->p;
 	float pmag = glm::length(pos12);
