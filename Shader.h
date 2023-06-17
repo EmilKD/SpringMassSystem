@@ -20,11 +20,13 @@ public:
 	unsigned int ID;
 	Shader();
 	void use();
-	void CreateTexture(const char* filePath, string fileFormat);
+	void CreateTexture(const char* filePath);
 	void setBool(const string &name, bool value) const;
 	void setInt(const string& name, int value) const;
 	void setFloat(const string& name, float value) const;
 	void set3fv(const string& name, glm::vec3 value) const;
+
+	unsigned int texture{};
 
 private:
 	void checkCompileErrors(unsigned int shader, string type);

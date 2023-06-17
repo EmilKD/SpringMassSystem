@@ -13,13 +13,14 @@ using std::vector;
 class GraphicalObj {
 
 public:
-	GraphicalObj(Shader &shader);
+	GraphicalObj(Shader &shader, const char* TexturefilePath);
 	~GraphicalObj();
 	void VertexUpdate(vector<float>* vertices, vector<int>* indices);
 	void BufferUpdate();
 	void DrawShape(glm::vec3 color);
 	void transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate, glm::vec3 rotAxis);
-	
+	Shader getShader();
+
 	vector<float> vertexBuffer = {
 		// Postition             Colors                   Texture Coords
 		0.5f, 0.5f, 0.0f,        0.0f, 0.0f, 0.0f,        1.0f, 1.0f,          //top right
@@ -36,7 +37,8 @@ public:
 	glm::mat4 model = glm::mat4(1.0f);
 
 private:
-	Shader shader;
+	Shader Objshader;
 	GLuint VBO{}, VAO{}, EBO{};
+	const char* texturePath;
 };
-#endif // !GUI_H
+#endif // !GUI_H4

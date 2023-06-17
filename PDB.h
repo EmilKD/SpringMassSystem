@@ -21,11 +21,8 @@ struct Particle
 	glm::vec3 v{};
 	glm::vec3 f{};
 
-	Particle(int pid = 0, float mass = 1.0f, glm::vec3* position = NULL, glm::vec3* velocity = NULL, glm::vec3* force = NULL)
+	Particle(int pid = 0, float mass = 1.0f, glm::vec3* position = NULL, glm::vec3* velocity = NULL, glm::vec3* force = NULL) : ID{pid}, m{mass}
 	{
-		ID = pid;
-		m = mass;
-
 		if (position)
 			p = *position;
 		else
