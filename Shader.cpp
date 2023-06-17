@@ -55,8 +55,6 @@ Shader::Shader()
     // delete the shaders as they're linked into our program now and no longer necessary
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-
-    CreateTexture("./Textures/GlowDotFilled.png", "png");
 }
 
 void Shader::use()
@@ -64,14 +62,13 @@ void Shader::use()
     glUseProgram(ID);
 }
 
-void Shader::CreateTexture(const char* filePath, string fileFormat)
+void Shader::CreateTexture(const char* filePath)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glGenTextures(1, &this->texture);
+    glBindTexture(GL_TEXTURE_2D, this->texture);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -90,7 +87,7 @@ void Shader::CreateTexture(const char* filePath, string fileFormat)
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 

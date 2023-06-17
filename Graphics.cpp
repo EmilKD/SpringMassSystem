@@ -2,9 +2,9 @@
 
 
 // Graphical Object Class Functions -----------------------------------------------------------------------------------
-GraphicalObj::GraphicalObj(Shader &shader)
-{	
-	this->shader = shader;
+GraphicalObj::GraphicalObj(Shader& shader, const char* TexturefilePath) : Objshader{shader}, texturePath{TexturefilePath}
+{
+	Objshader.CreateTexture(TexturefilePath);
 	BufferUpdate();
 }
 
@@ -58,13 +58,14 @@ void GraphicalObj::BufferUpdate()
 
 void GraphicalObj::DrawShape(glm::vec3 color)
 {
-	this->shader.use();
-	
+	this->Objshader.use();
+
 	// Setting the Color
-	this->shader.set3fv("myColor", color);
+	this->Objshader.set3fv("myColor", color);
+	glBindTexture(GL_TEXTURE_2D, this->Objshader.texture);
 
 	if (!indexBuffer.empty())
-	{
+	{	
 		glBindVertexArray(this->VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -81,9 +82,14 @@ void GraphicalObj::DrawShape(glm::vec3 color)
 
 void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate, glm::vec3 rotAxis)
 {
-	model = glm::mat4(1.0f);
-	model = glm::scale(model, scale);
-	model = glm::translate(model, translate);
-	unsigned int transLocation = glGetUniformLocation(this->shader.ID, "transform");
-	glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(model));
+	this->model = glm::mat4(1.0f);
+	this->model = glm::scale(this->model, scale);
+	this->model = glm::translate(this->model, translate);
+	unsigned int transLocation = glGetUniformLocation(this->Objshader.ID, "transform");
+	glUniformMatrix4fv(transLocation, 1, GL_FALSE, glm::value_ptr(this->model));
+}
+
+Shader GraphicalObj::getShader()
+{
+	return this->Objshader;
 }

@@ -11,14 +11,14 @@ bool CheckExist(vector<int> base, int value)
 }
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.1f, float l0 = 0.5f)
+void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.1f, float l0 = 4.0f)
 {
 	glm::vec3 pos12 = p1->p - p2->p;
 	float pmag = glm::length(pos12);
 
 	glm::vec3 vel12 = p1->v - p2->v;
 
-	glm::vec3 spring_force = (ks * abs((pmag - l0)) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
+	glm::vec3 spring_force = (ks * (pmag - l0) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
 
 	// Print out the forces
 	//std::cout << glm::length(spring_force) << std::endl;
@@ -32,13 +32,13 @@ void SpringForce(Particle* p1, Particle* p2, float ks = 10.0f, float kd = 0.1f, 
 // Particle System Functions ----------------------------------------------------------------------------------
 ParticleSystem::ParticleSystem()
 {
-	n = int(Particles.size());
+	this->n = int(Particles.size());
 }
 
 void ParticleSystem::AddParticle(Particle* p)
 {
-	Particles.push_back(*p);
-	n = int(Particles.size());
+	this->Particles.push_back(*p);
+	this->n = this->Particles.size();
 }
 
 void ParticleSystem::DeleteParticle(unsigned int id)

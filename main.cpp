@@ -81,7 +81,6 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		glm::float32 velMag = 0;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
-
 		int lastID = ps.n;
 
 		Particle p(lastID, 0.1f, &pos, &vel);
@@ -94,7 +93,6 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		glm::float32 velMag = 0;
 		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 		
-
 		int lastID = ps.n;
 
 		Particle p(lastID, 0.1f, &pos, &vel);
@@ -176,11 +174,13 @@ int main()
 	glfwSetKeyCallback(window, key_callback);
 
 	// Shader Compilation ---------------------------------------------------------------------------------------------
+	Shader SpringShader;
 	Shader MainShader;
 	
 
 	// Graphical Objects Declaration ----------------------------------------------------------------------------------
-	GraphicalObj rectangle(MainShader);
+	GraphicalObj rectangle(MainShader, "./Textures/GlowDotFilled.png");
+	GraphicalObj SpringShape(SpringShader, "./Textures/Spring.png");
 	Colors color;
 
 	// Program Loop ---------------------------------------------------------------------------------------------------
@@ -207,11 +207,12 @@ int main()
 
 			if (!ps.Particles.empty())
 			{
+				rectangle.getShader().use();
 				for (int i = 0; i < ps.n; ++i)
 				{
-					/*if (i == 0)
+					/*if (i == 0 || i==1)
 					{
-						rectangle.transform(glm::vec3(Scale_x*2.0f, Scale_y*2.0f, 1.0f), glm::vec3(ps.Particles[0].p[0], ps.Particles[0].p[1], 0.0f), 30, glm::vec3(1.0f));
+						rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
 						rectangle.DrawShape(color.Amber);
 
 					}*/
@@ -220,6 +221,23 @@ int main()
 					{
 						rectangle.transform(glm::vec3(Scale_x, Scale_y, 1.0f), glm::vec3(ps.Particles[i].p[0], ps.Particles[i].p[1], 0.0f), 30, glm::vec3(1.0f));
 						rectangle.DrawShape(color.White);
+					}
+				}
+
+				if (!ps.SpringParticles.empty())
+				{
+					SpringShape.getShader().use();
+					for (int i{ 0 }; i < ps.SpringParticles.size() / 2; ++i)
+					{
+						SpringShape.transform(
+							glm::vec3(Scale_x, Scale_y, 1.0f),
+							glm::vec3(
+								(ps.Particles[ps.SpringParticles[2*i]].p[0] + ps.Particles[ps.SpringParticles[2*i+1]].p[0]) / 2.0f, 
+								(ps.Particles[ps.SpringParticles[2*i]].p[1] + ps.Particles[ps.SpringParticles[2*i+1]].p[1]) / 2.0f, 0.0f),
+							30,
+							glm::vec3(1.0f));
+						SpringShape.DrawShape(color.White);
+						glBindTexture(GL_TEXTURE_2D, 0);
 					}
 				}
 			}
