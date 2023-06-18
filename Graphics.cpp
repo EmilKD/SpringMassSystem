@@ -69,12 +69,14 @@ void GraphicalObj::DrawShape(glm::vec3 color)
 		glBindVertexArray(this->VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindVertexArray(0);
 	}
 	else
 	{
 		glBindVertexArray(this->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindVertexArray(0);
 	}
 }
