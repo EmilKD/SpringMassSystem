@@ -1,26 +1,6 @@
-﻿  PDB.cpp
-D:\Project\PBD\PDB.cpp(41,32): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-D:\Project\PBD\PDB.cpp(58,33): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  main.cpp
-D:\Project\PBD\main.cpp(56,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Project\PBD\main.cpp(57,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Project\PBD\main.cpp(58,42): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Project\PBD\main.cpp(59,43): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
-  LINK : D:\Project\PBD\x64\Debug\PBDSolver.exe not found or not built by the last incremental link; performing full link
-glfw3.lib(init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
-glfw3.lib(context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_init.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_init.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_time.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_time.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_thread.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_thread.obj)' or at ''; linking object as if no debug info
-glfw3.lib(monitor.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(monitor.obj)' or at ''; linking object as if no debug info
-glfw3.lib(vulkan.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(vulkan.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_window.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_window.obj)' or at ''; linking object as if no debug info
-glfw3.lib(win32_joystick.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(win32_joystick.obj)' or at ''; linking object as if no debug info
-glfw3.lib(wgl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(wgl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(egl_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(egl_context.obj)' or at ''; linking object as if no debug info
-glfw3.lib(osmesa_context.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(osmesa_context.obj)' or at ''; linking object as if no debug info
-  PBDSolver.vcxproj -> D:\Project\PBD\x64\Debug\PBDSolver.exe
+﻿  main.cpp
+D:\Projects\main.cpp(87,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\main.cpp(88,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\main.cpp(89,42): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Projects\main.cpp(90,43): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  PBDSolver.vcxproj -> D:\Projects\x64\Debug\PBDSolver.exe

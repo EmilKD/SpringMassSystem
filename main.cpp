@@ -3,14 +3,21 @@
 
 using std::cout, std::endl, std::vector, std::array;
 
+//=====================================================================================================================
 // Particle Physics ---------------------------------------------------------------------------------------------------
+//=====================================================================================================================
 ParticleSystem ps;
 
+//=====================================================================================================================
 // Variables and Objects declaration-----------------------------------------------------------------------------------
-float g_xpos, g_ypos;
+//=====================================================================================================================
+
 bool left_mouse_button;
+bool right_mouse_button;
+static bool DragFlag{ false };
 
 array<int, 2> windowSize{1000, 1000};
+float g_xpos, g_ypos;
 float wc_x;
 float wc_y;
 
@@ -34,10 +41,34 @@ struct Colors
 	glm::vec3 White{glm::vec3(1.0f, 1.0f, 1.0f)};
 };
 
-void GetParticleState(const ParticleSystem* ps, vector<float>* dst);
-void EulerSolver(ParticleSystem* ps, float DeltaT);
+unsigned int GetClosestParticle(ParticleSystem* ps, Particle& ref)
+{
+	float closestDistance{ 1000 };
+	unsigned int closestID{ 0 };
+	glm::vec3 deltap{ glm::vec3(0.0f) };
+	float dist{ 0 };
 
+	for (Particle p : ps->Particles)
+	{
+		deltap = p.p - ref.p;
+		dist = glm::length2(deltap);
+
+		//cout << "distance from particle " << p.ID << " :" << dist << endl;
+
+		if (dist < closestDistance)
+		{
+			closestDistance = dist;
+			closestID = p.ID;
+		}
+	}
+	//cout << "closest Particle is: particle #" << closestID << endl;
+	return closestID;
+}
+
+
+//=====================================================================================================================
 // CallBacks ----------------------------------------------------------------------------------------------------------
+//=====================================================================================================================
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -70,12 +101,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		cout << "Number of Particles: " << ps.Particles.size() << endl;
 	}
-
 }
 
 void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 {
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
+	// Dropping Particles
+	/*if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
 	{
 		glm::vec3 pos{wc_x, wc_y, 0};
 		glm::float32 velMag = 0;
@@ -85,9 +116,13 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
-	}
+	}*/
 
-	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2))
+	left_mouse_button = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1);
+	right_mouse_button = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2);
+
+
+	if (right_mouse_button)
 	{
 		glm::vec3 pos{ wc_x, wc_y, 0};
 		glm::float32 velMag = 10;
@@ -105,10 +140,47 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 	}
 }
 
+void drag()
+{
+	
+	glm::vec3 pos{wc_x, wc_y, 0};
+	static Particle DragParticle;
 
+	if (left_mouse_button && DragFlag==false)
+	{	
+		DragParticle.ID = ps.n;
+		DragParticle.p = pos;
+		unsigned int closestID = GetClosestParticle(&ps, DragParticle);
+
+		ps.AddParticle(&DragParticle);
+		ps.Ignoreparticles.push_back(DragParticle.ID);
+
+		ps.SpringParticles.push_back(DragParticle.ID);
+		ps.SpringParticles.push_back(closestID);
+
+		DragFlag = true;
+	}
+
+	else if(left_mouse_button && DragFlag == true)
+	{
+		ps.Particles[ps.n - 1].p = pos;
+	}
+	
+	else if(!left_mouse_button && DragFlag == true)
+	{
+		ps.DeleteParticle(DragParticle.ID);
+		ps.Ignoreparticles.erase(ps.Ignoreparticles.begin() + ps.Ignoreparticles.size() - 1);
+		DragFlag = false;
+	}
+}
+
+//=====================================================================================================================
 // Main ---------------------------------------------------------------------------------------------------------------
+//=====================================================================================================================
 int main()
 {
+
+	// Creating the Mass Spring Grid
 	glm::vec3 pos0, pos1, pos2, pos3;
 	pos0 = glm::vec3(-2, 4, 0);
 	pos1 = glm::vec3(2, 4, 0);
@@ -140,8 +212,11 @@ int main()
 	ps.SpringParticles.push_back(2);
 	ps.SpringParticles.push_back(3);
 
+	//=================================================================================================================
 	// GLFW initialization --------------------------------------------------------------------------------------------
+	//=================================================================================================================
 	glfwInit();
+
 	// setting window hints aka OpenGL version and profile
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -168,24 +243,31 @@ int main()
 		return -1;
 	}
 
+	//=================================================================================================================
 	// CallBacks ------------------------------------------------------------------------------------------------------
+	//=================================================================================================================
 	// updating viewport size if window size is changed CallBack
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, cursor_pos_callBack);
 	glfwSetMouseButtonCallback(window, mouse_clicked);
 	glfwSetKeyCallback(window, key_callback);
 
+	//=================================================================================================================
 	// Shader Compilation ---------------------------------------------------------------------------------------------
+	//=================================================================================================================
 	Shader SpringShader;
 	Shader MainShader;
 	
-
+	//=================================================================================================================
 	// Graphical Objects Declaration ----------------------------------------------------------------------------------
+	//=================================================================================================================
 	GraphicalObj rectangle(MainShader, "./Textures/GlowDotFilled.png");
 	GraphicalObj SpringShape(SpringShader, "./Textures/Spring.png");
 	Colors color;
 
+	//=================================================================================================================
 	// Program Loop ---------------------------------------------------------------------------------------------------
+	//=================================================================================================================
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
@@ -204,6 +286,9 @@ int main()
 		//if (DeltaT > 0.005)
 		{
 			previousTime = runtime;
+
+			// Dragging the Particles
+			drag();
 
 			ps.EulerSolve(float(DeltaT));
 
@@ -242,7 +327,6 @@ int main()
 							-glm::atan(deltap[0]/deltap[1]));
 
 						SpringShape.DrawShape(color.White);
-						glBindTexture(GL_TEXTURE_2D, 0);
 					}
 				}
 			}

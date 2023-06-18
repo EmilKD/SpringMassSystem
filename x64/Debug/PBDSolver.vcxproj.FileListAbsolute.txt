@@ -2,3 +2,4 @@ E:\DynamicsSim\PBDSolver\x64\Debug\PBDSolver.exe
 E:\Projects\DynamicsSim\PBDSolver\x64\Debug\PBDSolver.exe
 E:\Projects\PBD\x64\Debug\PBDSolver.exe
 D:\Project\PBD\x64\Debug\PBDSolver.exe
+D:\Projects\x64\Debug\PBDSolver.exe

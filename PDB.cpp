@@ -45,15 +45,18 @@ void ParticleSystem::DeleteParticle(unsigned int id)
 {
 	if (this->n > 0)
 	{
-		this->Particles.erase(Particles.begin() + id - 1);
-		std::cout << "Oy, last Particle Killed!" << std::endl;
+		// Deleting Particles from the Particle System
+		this->Particles.erase(Particles.begin() + id);
 
-
-		/*for (int i = 0; i < this->SpringParticles.size(); ++i)
+		// Removing Deleted Spring Particles IDs
+		for (int i = 0; i < this->SpringParticles.size(); ++i)
 		{
-			if (this->SpringParticles[i][0] == id || this->SpringParticles[i][1] == id)
-				this->SpringParticles.erase(this->SpringParticles.begin() + i - 1);
-		}*/
+			if (this->SpringParticles[i] == id)
+			{
+				this->SpringParticles.erase(this->SpringParticles.begin() + i);
+				this->SpringParticles.erase(this->SpringParticles.begin() + i);
+			}
+		}
 
 		this->n = this->Particles.size();
 	}
