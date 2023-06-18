@@ -184,11 +184,13 @@ int main()
 {
 
 	// Creating the Mass Spring Grid
-	glm::vec3 pos0, pos1, pos2, pos3;
-	pos0 = glm::vec3(-2, 4, 0);
-	pos1 = glm::vec3(2, 4, 0);
-	pos2 = glm::vec3(-2, 2, 0);
-	pos3 = glm::vec3(2, 2, 0);
+	glm::vec3 pos0, pos1, pos2, pos3, pos4, pos5;
+	pos0 = glm::vec3(-2, 6, 0);
+	pos1 = glm::vec3(2, 6, 0);
+	pos2 = glm::vec3(-2, 4, 0);
+	pos3 = glm::vec3(2, 4, 0);
+	pos4 = glm::vec3(-2, 2, 0);
+	pos5 = glm::vec3(2, 2, 0);
 
 	Particle p0(0, 1.0f, &pos0);
 	ps.AddParticle(&p0);
@@ -198,6 +200,10 @@ int main()
 	ps.AddParticle(&p2);
 	Particle p3(3, 1.0f, &pos3);
 	ps.AddParticle(&p3);
+	Particle p4(4, 1.0f, &pos4);
+	ps.AddParticle(&p4);
+	Particle p5(5, 1.0f, &pos5);
+	ps.AddParticle(&p5);
 
 	ps.Ignoreparticles.push_back(0);
 	ps.Ignoreparticles.push_back(1);
@@ -214,7 +220,16 @@ int main()
 	ps.SpringParticles.push_back(3);
 	ps.SpringParticles.push_back(2);
 	ps.SpringParticles.push_back(3);
-
+	ps.SpringParticles.push_back(2);
+	ps.SpringParticles.push_back(4);
+	ps.SpringParticles.push_back(2);
+	ps.SpringParticles.push_back(5);
+	ps.SpringParticles.push_back(3);
+	ps.SpringParticles.push_back(4);
+	ps.SpringParticles.push_back(3);
+	ps.SpringParticles.push_back(5);
+	ps.SpringParticles.push_back(4);
+	ps.SpringParticles.push_back(5);
 	//=================================================================================================================
 	// GLFW initialization --------------------------------------------------------------------------------------------
 	//=================================================================================================================
