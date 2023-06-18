@@ -50,6 +50,9 @@ unsigned int GetClosestParticle(ParticleSystem* ps, Particle& ref)
 
 	for (Particle p : ps->Particles)
 	{
+		if (p.ID == ref.ID)
+			continue;
+
 		deltap = p.p - ref.p;
 		dist = glm::length2(deltap);
 
@@ -133,7 +136,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 
-		ps.SpringParticles.push_back(lastID - 1);
+		ps.SpringParticles.push_back(GetClosestParticle(&ps, p));
 		ps.SpringParticles.push_back(lastID);
 
 		// Add Spring Constants
