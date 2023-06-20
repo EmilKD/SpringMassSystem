@@ -38,6 +38,23 @@ struct Particle
 	}
 };
 
+class SpringConstraint
+{
+public:
+	SpringConstraint(Particle* sp1, Particle* sp2);
+	void CalculateConstraintForce();
+	void setRestLength(float newLength);
+	float getRestLength();
+
+	array<Particle*, 2> SpringParticles{};
+
+private:
+	float ks{ 10.0f };
+	float kd{ 1.0f };
+	float RestLength{ 4.0f };
+};
+
+
 class ParticleSystem
 {
 public:
@@ -60,6 +77,7 @@ public:
 	float Gravity{ -9.83f };
 	float Drag{ 0.1f };
 
+	vector<SpringConstraint> sConstraint{};
 	vector<int> SpringParticles{};
 	vector<float> SpringConsts{};
 	vector<float> SpringLengths{};
@@ -68,5 +86,7 @@ public:
 private:
 
 };
+
+
 
 #endif // !PDB_H

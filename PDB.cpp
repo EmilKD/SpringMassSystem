@@ -11,23 +11,48 @@ bool CheckExist(vector<int> base, int value)
 }
 
 // Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 10000.0f, float kd = 100.0f, float l0 = 4.0f)
+//void SpringForce(Particle* p1, Particle* p2, float ks = 10000.0f, float kd = 100.0f, float l0 = 4.0f)
+//{
+//	glm::vec3 pos12 = p1->p - p2->p;
+//	float pmag = glm::length(pos12);
+//
+//	glm::vec3 vel12 = p1->v - p2->v;
+//
+//	glm::vec3 spring_force = (ks * (pmag - l0) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
+//
+//	// Print out the forces
+//	//std::cout << glm::length(spring_force) << std::endl;
+//
+//	p1->f -= spring_force;
+//	p2->f += spring_force;
+//}
+
+SpringConstraint::SpringConstraint(Particle* sp1, Particle* sp2) : SpringParticles{ sp1, sp2 }
 {
-	glm::vec3 pos12 = p1->p - p2->p;
-	float pmag = glm::length(pos12);
-
-	glm::vec3 vel12 = p1->v - p2->v;
-
-	glm::vec3 spring_force = (ks * (pmag - l0) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
-
-	// Print out the forces
-	//std::cout << glm::length(spring_force) << std::endl;
-
-	p1->f -= spring_force;
-	p2->f += spring_force;
 }
 
+void SpringConstraint::CalculateConstraintForce()
+{
+	glm::vec3 pos12 = this->SpringParticles[0]->p - this->SpringParticles[1]->p;
+	float pmag = glm::length(pos12);
 
+	glm::vec3 vel12 = this->SpringParticles[0]->v - this->SpringParticles[1]->v;
+
+	glm::vec3 SpringForce = (ks * (pmag - RestLength) + kd * glm::dot(vel12, pos12) / pmag) * glm::normalize(pos12);
+
+	this->SpringParticles[0]->f -= SpringForce;
+	this->SpringParticles[1]->f += SpringForce;
+}
+
+void SpringConstraint::setRestLength(float newLength)
+{
+	this->RestLength = newLength;
+}
+
+float SpringConstraint::getRestLength()
+{
+	return this->RestLength;
+}
 
 // Particle System Functions ----------------------------------------------------------------------------------
 ParticleSystem::ParticleSystem()
@@ -43,19 +68,30 @@ void ParticleSystem::AddParticle(Particle* p)
 
 void ParticleSystem::DeleteParticle(unsigned int id)
 {
+	int counter{ 0 };
+
 	if (this->n > 0)
 	{
 		// Deleting Particles from the Particle System
 		this->Particles.erase(Particles.begin() + id);
 
 		// Removing Deleted Spring Particles IDs
-		for (int i = 0; i < this->SpringParticles.size(); ++i)
+		/*for (int i = 0; i < this->SpringParticles.size(); ++i)
 		{
 			if (this->SpringParticles[i] == id)
 			{
 				this->SpringParticles.erase(this->SpringParticles.begin() + i);
 				this->SpringParticles.erase(this->SpringParticles.begin() + i);
 			}
+		}*/
+
+		for(SpringConstraint& sp : this->sConstraint)
+		{
+			if (sp.SpringParticles[0]->ID == id || sp.SpringParticles[1]->ID == id)
+			{
+				this->sConstraint.erase(sConstraint.begin() + counter);
+			}
+			++counter;
 		}
 
 		this->n = this->Particles.size();
@@ -67,7 +103,7 @@ void ParticleSystem::ClearForces()
 {
 	for(int i=0; i<n; ++i)
 	{
-		Particles[i].f = {0.0f,0.0f,0.0f};
+		this->Particles[i].f = {0.0f,0.0f,0.0f};
 	}
 }
 
@@ -77,15 +113,19 @@ void ParticleSystem::CalculateForces()
 	// For Loops could be optimized by turing into matrix operations 
 	for (int i{ 0 }; i < Particles.size(); ++i)
 	{
-		Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
+		this->Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
 
 		// if particle has string
 	}
 	
-	for (int i{ 0 }; i<SpringParticles.size()/2; ++i)
+	/*for (int i{ 0 }; i<SpringParticles.size()/2; ++i)
 	{
-		SpringForce(&Particles[SpringParticles[2*i]],
-			&Particles[SpringParticles[2*i + 1]]);
+		SpringForce(&Particles[SpringParticles[2*i]], &Particles[SpringParticles[2*i + 1]]);
+	}*/
+
+	for (SpringConstraint& sp : this->sConstraint)
+	{
+		sp.CalculateConstraintForce();
 	}
 	
 }
