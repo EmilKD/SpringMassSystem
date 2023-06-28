@@ -78,7 +78,7 @@ private:
 class SpringConstraint
 {
 public:
-	SpringConstraint(Particle* p1, Particle* p2, float kstiff = 1000.0f, float kdamp = 10.0f, float l0 = 4.0f) : ks{ kstiff }, kd{ kdamp }, restLength{ l0 }, particleIDs{ p1->ID, p2->ID }
+	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float kstiff = 1000.0f, float kdamp = 10.0f, float l0 = 4.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, restLength{ l0 }, particleIDs{ p1->ID, p2->ID }
 	{
 
 	}
@@ -97,19 +97,25 @@ public:
 
 		float forceMag = glm::length(spring_force);
 
+		if (counter > 1000)
+		{
+			std::cout << "rest length: " << restLength << std::endl;
+			counter = 0;
+		}
 
-		/*if (forceMag > PlasticityForce && (pmag - restLength) > 0)
+		counter++;
+		if (forceMag > PlasticityForce && (pmag - restLength) > 0)
 		{
 			std::cout << "plastic tensile deformation!" << std::endl;
-			restLength = restLength * 1.1;
-			PlasticityForce += PlasticityForce * 1.1;
+			ps->sConstraints[this->ID].restLength *= 1.01;
+			ps->sConstraints[this->ID].PlasticityForce *= 1.01;
 		}
 		else if(forceMag > PlasticityForce && (pmag - restLength) < 0)
 		{
 			std::cout << "plastic compressive deformation!" << std::endl;
-			restLength = restLength * 0.9;
-			PlasticityForce += PlasticityForce * 1.1;
-		}*/
+			ps->sConstraints[this->ID].restLength *= 0.99;
+			ps->sConstraints[this->ID].PlasticityForce *= 1.01;
+		}
 
 		// derivetives for backwards euler solve -----------------------
 
@@ -137,11 +143,12 @@ public:
 	}
 
 private:
-	float ks{};
-	float kd{};
-	float restLength{};
-	float PlasticityForce{5000.0f};
-	array<int, 2> particleIDs{};
+	unsigned int ID{};
+	float ks;
+	float kd;
+	float restLength;
+	float PlasticityForce{500.0f};
+	array<int, 2> particleIDs;
 };
 
 #endif // !PDB_H

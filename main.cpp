@@ -136,7 +136,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 
-		ps.sConstraints.push_back(SpringConstraint(&ps.Particles[GetClosestParticle(&ps, p)], &ps.Particles[lastID]));
+		ps.sConstraints.push_back(SpringConstraint(ps.sConstraints.size(),  & ps.Particles[GetClosestParticle(&ps, p)], &ps.Particles[lastID]));
 
 		//ps.SpringParticles.push_back(GetClosestParticle(&ps, p));
 		//ps.SpringParticles.push_back(lastID);
@@ -160,7 +160,7 @@ void drag()
 		ps.AddParticle(&DragParticle);
 		ps.Ignoreparticles.push_back(DragParticle.ID);
 
-		ps.sConstraints.push_back(SpringConstraint(&ps.Particles[DragParticle.ID], &ps.Particles[closestID]));
+		ps.sConstraints.push_back(SpringConstraint(ps.sConstraints.size(), &ps.Particles[DragParticle.ID], &ps.Particles[closestID]));
 
 		//ps.SpringParticles.push_back(DragParticle.ID);
 		//ps.SpringParticles.push_back(closestID);
@@ -190,12 +190,12 @@ int main()
 
 	// Creating the Mass Spring Grid
 	glm::vec3 pos0, pos1, pos2, pos3, pos4, pos5;
-	pos0 = glm::vec3(-2, 6, 0);
-	pos1 = glm::vec3(2, 6, 0);
-	pos2 = glm::vec3(-2, 4, 0);
-	pos3 = glm::vec3(2, 4, 0);
-	pos4 = glm::vec3(-2, 2, 0);
-	pos5 = glm::vec3(2, 2, 0);
+	pos0 = glm::vec3(-2, 16, 0);
+	pos1 = glm::vec3(2, 16, 0);
+	pos2 = glm::vec3(-2, 12, 0);
+	pos3 = glm::vec3(2, 12, 0);
+	pos4 = glm::vec3(-2, 8, 0);
+	pos5 = glm::vec3(2, 8, 0);
 
 	Particle p0(0, 1.0f, &pos0);
 	ps.AddParticle(&p0);
@@ -213,17 +213,17 @@ int main()
 	ps.Ignoreparticles.push_back(0);
 	ps.Ignoreparticles.push_back(1);
 
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[0], &ps.Particles[1]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[0], &ps.Particles[2]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[0], &ps.Particles[3]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[1], &ps.Particles[2]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[1], &ps.Particles[3]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[2], &ps.Particles[3]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[2], &ps.Particles[4]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[2], &ps.Particles[5]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[3], &ps.Particles[4]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[3], &ps.Particles[5]));
-	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[4], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(0, &ps.Particles[0], &ps.Particles[1]));
+	ps.sConstraints.push_back(SpringConstraint(1, &ps.Particles[0], &ps.Particles[2]));
+	ps.sConstraints.push_back(SpringConstraint(2, &ps.Particles[0], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(3, &ps.Particles[1], &ps.Particles[2]));
+	ps.sConstraints.push_back(SpringConstraint(4, &ps.Particles[1], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(5, &ps.Particles[2], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(6, &ps.Particles[2], &ps.Particles[4]));
+	ps.sConstraints.push_back(SpringConstraint(7, &ps.Particles[2], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(8, &ps.Particles[3], &ps.Particles[4]));
+	ps.sConstraints.push_back(SpringConstraint(9, &ps.Particles[3], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(10, &ps.Particles[4], &ps.Particles[5]));
 
 	/*ps.SpringParticles.push_back(0);
 	ps.SpringParticles.push_back(1);
