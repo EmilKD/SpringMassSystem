@@ -136,8 +136,10 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 
-		ps.SpringParticles.push_back(GetClosestParticle(&ps, p));
-		ps.SpringParticles.push_back(lastID);
+		ps.sConstraints.push_back(SpringConstraint(&ps.Particles[GetClosestParticle(&ps, p)], &ps.Particles[lastID]));
+
+		//ps.SpringParticles.push_back(GetClosestParticle(&ps, p));
+		//ps.SpringParticles.push_back(lastID);
 
 		// Add Spring Constants
 	}
@@ -158,8 +160,10 @@ void drag()
 		ps.AddParticle(&DragParticle);
 		ps.Ignoreparticles.push_back(DragParticle.ID);
 
-		ps.SpringParticles.push_back(DragParticle.ID);
-		ps.SpringParticles.push_back(closestID);
+		ps.sConstraints.push_back(SpringConstraint(&ps.Particles[DragParticle.ID], &ps.Particles[closestID]));
+
+		//ps.SpringParticles.push_back(DragParticle.ID);
+		//ps.SpringParticles.push_back(closestID);
 
 		DragFlag = true;
 	}
@@ -171,6 +175,7 @@ void drag()
 	
 	else if(!left_mouse_button && DragFlag == true)
 	{
+		ps.sConstraints.erase(ps.sConstraints.begin() + ps.sConstraints.size() - 1);
 		ps.DeleteParticle(DragParticle.ID);
 		ps.Ignoreparticles.erase(ps.Ignoreparticles.begin() + ps.Ignoreparticles.size() - 1);
 		DragFlag = false;
@@ -208,28 +213,51 @@ int main()
 	ps.Ignoreparticles.push_back(0);
 	ps.Ignoreparticles.push_back(1);
 
-	ps.SpringParticles.push_back(0);
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[0], &ps.Particles[1]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[0], &ps.Particles[2]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[0], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[1], &ps.Particles[2]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[1], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[2], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[2], &ps.Particles[4]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[2], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[3], &ps.Particles[4]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[3], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(&ps.Particles[4], &ps.Particles[5]));
+
+	/*ps.SpringParticles.push_back(0);
 	ps.SpringParticles.push_back(1);
+
 	ps.SpringParticles.push_back(0);
 	ps.SpringParticles.push_back(2);
+
 	ps.SpringParticles.push_back(0);
 	ps.SpringParticles.push_back(3);
+
 	ps.SpringParticles.push_back(1);
 	ps.SpringParticles.push_back(2);
+
 	ps.SpringParticles.push_back(1);
 	ps.SpringParticles.push_back(3);
+
 	ps.SpringParticles.push_back(2);
 	ps.SpringParticles.push_back(3);
+
 	ps.SpringParticles.push_back(2);
 	ps.SpringParticles.push_back(4);
+
 	ps.SpringParticles.push_back(2);
 	ps.SpringParticles.push_back(5);
+
 	ps.SpringParticles.push_back(3);
 	ps.SpringParticles.push_back(4);
+
 	ps.SpringParticles.push_back(3);
 	ps.SpringParticles.push_back(5);
+
 	ps.SpringParticles.push_back(4);
-	ps.SpringParticles.push_back(5);
+	ps.SpringParticles.push_back(5);*/
+
 	//=================================================================================================================
 	// GLFW initialization --------------------------------------------------------------------------------------------
 	//=================================================================================================================
@@ -301,7 +329,7 @@ int main()
 		runtime = glfwGetTime();
 		DeltaT = runtime - previousTime;
 
-		//if (DeltaT > 0.005)
+		//if (DeltaT > 0.05)
 		{
 			previousTime = runtime;
 
@@ -329,18 +357,18 @@ int main()
 					}
 				}
 
-				if (!ps.SpringParticles.empty())
+				if (!ps.sConstraints.empty())
 				{
 					SpringShape.getShader().use();
-					for (int i{ 0 }; i < ps.SpringParticles.size() / 2; ++i)
+					for (int i{ 0 }; i < ps.sConstraints.size(); ++i)
 					{
 
-						glm::vec3 deltap = ps.Particles[ps.SpringParticles[2 * i + 1]].p - ps.Particles[ps.SpringParticles[2 * i]].p;
+						glm::vec3 deltap = ps.Particles[ps.sConstraints[i].getParticleIDs()[1]].p - ps.Particles[ps.sConstraints[i].getParticleIDs()[0]].p;
 						SpringShape.transform(
 							glm::vec3(Scale_x, Scale_y, 1.0f),
 							glm::vec3(
-								(ps.Particles[ps.SpringParticles[2 * i]].p[0] + ps.Particles[ps.SpringParticles[2 * i + 1]].p[0]) / 2.0f, 
-								(ps.Particles[ps.SpringParticles[2 * i]].p[1] + ps.Particles[ps.SpringParticles[2 * i + 1]].p[1]) / 2.0f, 
+								(ps.Particles[ps.sConstraints[i].getParticleIDs()[0]].p[0] + ps.Particles[ps.sConstraints[i].getParticleIDs()[1]].p[0]) / 2.0f,
+								(ps.Particles[ps.sConstraints[i].getParticleIDs()[0]].p[1] + ps.Particles[ps.sConstraints[i].getParticleIDs()[1]].p[1]) / 2.0f,
 								0.0f),
 							-glm::atan(deltap[0]/deltap[1]));
 
@@ -357,12 +385,12 @@ int main()
 		//	timer = 0;
 		//}
 
-		if (timer > 5000)
-		{
-			//ps.DeleteParticle(ps.n);
-			timer = 0;
-		}
-		++timer;
+		//if (timer > 5000)
+		//{
+		//	ps.DeleteParticle(ps.n);
+		//	timer = 0;
+		//}
+		//++timer;
 	}
 
 	// Unbinding and closing all glfw windows and clearing opbjects

@@ -10,22 +10,7 @@ bool CheckExist(vector<int> base, int value)
 	return false;
 }
 
-// Force Objects -----------------------------------------------------------------------------------------------
-void SpringForce(Particle* p1, Particle* p2, float ks = 10000.0f, float kd = 100.0f, float l0 = 4.0f)
-{
-	glm::vec3 pos12 = p1->p - p2->p;
-	float pmag = glm::length(pos12);
 
-	glm::vec3 vel12 = p1->v - p2->v;
-
-	glm::vec3 spring_force = (ks * (pmag - l0) + kd * glm::dot(vel12, pos12)/pmag) * glm::normalize(pos12);
-
-	// Print out the forces
-	//std::cout << glm::length(spring_force) << std::endl;
-
-	p1->f -= spring_force;
-	p2->f += spring_force;
-}
 
 
 
@@ -49,14 +34,14 @@ void ParticleSystem::DeleteParticle(unsigned int id)
 		this->Particles.erase(Particles.begin() + id);
 
 		// Removing Deleted Spring Particles IDs
-		for (int i = 0; i < this->SpringParticles.size(); ++i)
+		/*for (int i = 0; i < this->SpringParticles.size(); ++i)
 		{
 			if (this->SpringParticles[i] == id)
 			{
 				this->SpringParticles.erase(this->SpringParticles.begin() + i);
 				this->SpringParticles.erase(this->SpringParticles.begin() + i);
 			}
-		}
+		}*/
 
 		this->n = this->Particles.size();
 	}
@@ -82,10 +67,15 @@ void ParticleSystem::CalculateForces()
 		// if particle has string
 	}
 	
-	for (int i{ 0 }; i<SpringParticles.size()/2; ++i)
+	/*for (int i{ 0 }; i<SpringParticles.size()/2; ++i)
 	{
-		SpringForce(&Particles[SpringParticles[2*i]],
+		SpringConstraint(&Particles[SpringParticles[2*i]],
 			&Particles[SpringParticles[2*i + 1]]);
+	}*/
+
+	for (SpringConstraint sc: sConstraints)
+	{
+		sc.CalculateSpringForce(this);
 	}
 	
 }
@@ -124,9 +114,6 @@ void ParticleSystem::SetParticleState(vector<float>* src)
 
 void ParticleSystem::ParticleDerivative(vector<float>* dst)
 {
-	this->ClearForces();
-	this->CalculateForces();
-
 	for (Particle p : this->Particles)
 	{
 		dst->push_back(p.v[0]);
@@ -178,10 +165,53 @@ void ParticleSystem::EulerSolve(float DeltaT)
 	vector<float> temp1{};
 	vector<float> temp2{};
 	GetParticleState(&temp1);
+	this->ClearForces();
+	this->CalculateForces();
 	ParticleDerivative(&temp2);
 	ScaleUp(&temp1, &temp2, DeltaT);
 	SetParticleState(&temp1);
 	CollisionDetect();
 	this->time += DeltaT;
 }
+
+void ParticleSystem::BackwardsEulerSolve(float DeltaT)
+{
+	// p0, v0 and a0
+	vector<glm::vec3> P0{};
+	vector<glm::vec3> V0{};
+	vector<glm::vec3> A0{};
+
+	glm::vec3 DeltaP{};
+
+	this->ClearForces();
+	this->CalculateForces();
+
+	for (Particle p : this->Particles)
+	{
+		P0.push_back(p.p);
+		V0.push_back(p.v + glm::vec3(0.001, 0.001, 0.0f));
+		A0.push_back(p.f / p.m);
+	}
+
+	// dv = h * inv(m * I - h*df/dv - h^2*df/dx) * (f0 + h * df/dx * V0) where f is the spring force
+	// p1 = p0 + h * dv;
+	
+
+	for (int i{0}; i<this->n; ++i)
+	{
+		
+	}
+
+	CollisionDetect();
+	this->time += DeltaT;
+
+}
+
+
+
+
+
+
+
+
 

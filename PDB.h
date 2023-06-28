@@ -38,6 +38,8 @@ struct Particle
 	}
 };
 
+class SpringConstraint;
+
 class ParticleSystem
 {
 public:
@@ -53,6 +55,7 @@ public:
 	void ScaleUp(vector<float>* v1, vector<float>* v2, float h);
 	void CollisionDetect();
 	void EulerSolve(float DeltaT);
+	void BackwardsEulerSolve(float DeltaT);
 
 	vector<Particle> Particles{};
 	int n{ 0 };
@@ -60,13 +63,85 @@ public:
 	float Gravity{ -9.83f };
 	float Drag{ 0.1f };
 
-	vector<int> SpringParticles{};
-	vector<float> SpringConsts{};
-	vector<float> SpringLengths{};
+	vector<SpringConstraint> sConstraints{};
+
+	vector<int> SpringParticles{}; // 
+	vector<float> SpringConsts{}; // <float ks, float kd, float l0, ... >
 	vector<int> Ignoreparticles{};
 
 private:
 
+};
+
+// Force Objects -----------------------------------------------------------------------------------------------
+
+class SpringConstraint
+{
+public:
+	SpringConstraint(Particle* p1, Particle* p2, float kstiff = 1000.0f, float kdamp = 10.0f, float l0 = 4.0f) : ks{ kstiff }, kd{ kdamp }, restLength{ l0 }, particleIDs{ p1->ID, p2->ID }
+	{
+
+	}
+
+	void CalculateSpringForce(ParticleSystem* ps)
+	{
+		static int counter{ 0 };
+		glm::vec3 pos12 = ps->Particles[particleIDs[0]].p - ps->Particles[particleIDs[1]].p;
+		glm::vec3 pos12dir = glm::normalize(pos12);
+		float pmag = glm::length(pos12);
+
+
+		glm::vec3 vel12 = ps->Particles[particleIDs[0]].v - ps->Particles[particleIDs[1]].v;
+
+		glm::vec3 spring_force = (ks * (pmag - restLength) + kd * glm::dot(vel12, pos12) / pmag) * pos12dir;
+
+		float forceMag = glm::length(spring_force);
+
+
+		/*if (forceMag > PlasticityForce && (pmag - restLength) > 0)
+		{
+			std::cout << "plastic tensile deformation!" << std::endl;
+			restLength = restLength * 1.1;
+			PlasticityForce += PlasticityForce * 1.1;
+		}
+		else if(forceMag > PlasticityForce && (pmag - restLength) < 0)
+		{
+			std::cout << "plastic compressive deformation!" << std::endl;
+			restLength = restLength * 0.9;
+			PlasticityForce += PlasticityForce * 1.1;
+		}*/
+
+		// derivetives for backwards euler solve -----------------------
+
+		//glm::mat3 dfdxi = -ks * ((1 - l0 / pmag) * (glm::mat3(1.0f) - glm::outerProduct(pos12dir, pos12dir)) + glm::outerProduct(pos12dir, pos12dir));
+		//glm::mat3 dfdxj = -dfdxi;
+		//glm::mat3 dfdv = -kd * glm::mat3(1.0f);
+
+		ps->Particles[particleIDs[0]].f -= spring_force;
+		ps->Particles[particleIDs[1]].f += spring_force;
+	}
+
+	float getRestLength()
+	{
+		return restLength;
+	}
+
+	void setRestLength(float newLength)
+	{
+		restLength = newLength;
+	}
+
+	array<int, 2> getParticleIDs()
+	{
+		return particleIDs;
+	}
+
+private:
+	float ks{};
+	float kd{};
+	float restLength{};
+	float PlasticityForce{5000.0f};
+	array<int, 2> particleIDs{};
 };
 
 #endif // !PDB_H
