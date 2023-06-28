@@ -3,6 +3,8 @@
 
 using std::cout, std::endl, std::vector, std::array;
 
+bool dropParticles{ false };
+
 //=====================================================================================================================
 // Particle Physics ---------------------------------------------------------------------------------------------------
 //=====================================================================================================================
@@ -104,26 +106,34 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 		cout << "Number of Particles: " << ps.Particles.size() << endl;
 	}
+
+	if (key == GLFW_KEY_D && action == GLFW_PRESS)
+	{
+		dropParticles = !dropParticles;
+		cout << dropParticles;
+	}
 }
 
 void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 {
 	// Dropping Particles
-	/*if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
+	if (dropParticles == true)
 	{
-		glm::vec3 pos{wc_x, wc_y, 0};
-		glm::float32 velMag = 0;
-		glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
-		
-		int lastID = ps.n;
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1))
+		{
+			glm::vec3 pos{wc_x, wc_y, 0};
+			glm::float32 velMag = 10;
+			glm::vec3 vel = velMag * glm::cross(glm::normalize(pos), glm::vec3(0.0f, 0.0f, 1.0));
 
-		Particle p(lastID, 0.1f, &pos, &vel);
-		ps.AddParticle(&p);
-	}*/
+			int lastID = ps.n;
+
+			Particle p(lastID, 0.1f, &pos, &vel);
+			ps.AddParticle(&p);
+		}
+	}
 
 	left_mouse_button = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1);
 	right_mouse_button = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2);
-
 
 	if (right_mouse_button)
 	{
@@ -146,8 +156,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 }
 
 void drag()
-{
-	
+{	
 	glm::vec3 pos{wc_x, wc_y, 0};
 	static Particle DragParticle;
 
@@ -334,10 +343,16 @@ int main()
 			previousTime = runtime;
 
 			// Dragging the Particles
-			drag();
+			if (dropParticles == false)
+			{
+				drag();
+			}
 
+			// Solve
 			ps.EulerSolve(float(DeltaT));
 
+
+			// Render
 			if (!ps.Particles.empty())
 			{
 				rectangle.getShader().use();
@@ -378,16 +393,11 @@ int main()
 			}
 		}
 
+		// Print FPS
 		//if (timer > 500)
 		//{
 		//	//system("CLS");
 		//	cout << "FPS: " << 1 / DeltaT << endl;
-		//	timer = 0;
-		//}
-
-		//if (timer > 5000)
-		//{
-		//	ps.DeleteParticle(ps.n);
 		//	timer = 0;
 		//}
 		//++timer;

@@ -62,6 +62,8 @@ public:
 	float time{ 0.0f };
 	float Gravity{ -9.83f };
 	float Drag{ 0.1f };
+	float repulsion{ 100.0f };
+	float repulsionRadius{ 2 };
 
 	vector<SpringConstraint> sConstraints{};
 
@@ -78,9 +80,11 @@ private:
 class SpringConstraint
 {
 public:
-	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float kstiff = 1000.0f, float kdamp = 10.0f, float l0 = 4.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, restLength{ l0 }, particleIDs{ p1->ID, p2->ID }
+	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float kstiff = 1000.0f, float kdamp = 100.0f, float l0 = 4.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
 	{
-
+		glm::vec3 pos12 = p1->p - p2->p;
+		float pmag = glm::length(pos12);
+		restLength = pmag;
 	}
 
 	void CalculateSpringForce(ParticleSystem* ps)
@@ -90,29 +94,28 @@ public:
 		glm::vec3 pos12dir = glm::normalize(pos12);
 		float pmag = glm::length(pos12);
 
-
 		glm::vec3 vel12 = ps->Particles[particleIDs[0]].v - ps->Particles[particleIDs[1]].v;
 
 		glm::vec3 spring_force = (ks * (pmag - restLength) + kd * glm::dot(vel12, pos12) / pmag) * pos12dir;
 
 		float forceMag = glm::length(spring_force);
 
-		if (counter > 1000)
+		/*if (counter > 1000)
 		{
 			std::cout << "rest length: " << restLength << std::endl;
 			counter = 0;
-		}
+		}*/
 
 		counter++;
 		if (forceMag > PlasticityForce && (pmag - restLength) > 0)
 		{
-			std::cout << "plastic tensile deformation!" << std::endl;
+			//std::cout << "plastic tensile deformation!" << std::endl;
 			ps->sConstraints[this->ID].restLength *= 1.01;
 			ps->sConstraints[this->ID].PlasticityForce *= 1.01;
 		}
 		else if(forceMag > PlasticityForce && (pmag - restLength) < 0)
 		{
-			std::cout << "plastic compressive deformation!" << std::endl;
+			//std::cout << "plastic compressive deformation!" << std::endl;
 			ps->sConstraints[this->ID].restLength *= 0.99;
 			ps->sConstraints[this->ID].PlasticityForce *= 1.01;
 		}
@@ -147,7 +150,7 @@ private:
 	float ks;
 	float kd;
 	float restLength;
-	float PlasticityForce{500.0f};
+	float PlasticityForce{1000.0f};
 	array<int, 2> particleIDs;
 };
 

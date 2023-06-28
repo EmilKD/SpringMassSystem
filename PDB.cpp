@@ -58,21 +58,37 @@ void ParticleSystem::ClearForces()
 
 void ParticleSystem::CalculateForces()
 {
+	glm::vec3 P12{};
+	glm::vec3 Dir{};
+	float dist{ 0 };
 
-	// For Loops could be optimized by turing into matrix operations 
-	for (int i{ 0 }; i < Particles.size(); ++i)
+	// Gravity Force 
+	for (int i{ 0 }; i < this->n; ++i)
 	{
 		Particles[i].f[1] += Gravity - Drag * Particles[i].v[1];
 
 		// if particle has string
 	}
 	
-	/*for (int i{ 0 }; i<SpringParticles.size()/2; ++i)
+	// Particle Repulsion Force
+	for (int i{ 0 }; i < this->n; ++i)
 	{
-		SpringConstraint(&Particles[SpringParticles[2*i]],
-			&Particles[SpringParticles[2*i + 1]]);
-	}*/
+		for (int j{ i+1 }; j < this->n; ++j)
+		{
+			P12 = this->Particles[i].p - this->Particles[j].p;
+			dist = glm::length(P12);
+			
+			if(dist < repulsionRadius)
+			{
+				Dir = glm::normalize(P12);
+				this->Particles[i].f += repulsion * Dir / (dist*dist);
+				this->Particles[j].f -= repulsion * Dir / (dist*dist);
+			}
+		}
 
+	}
+
+	// Spring Force
 	for (SpringConstraint sc: sConstraints)
 	{
 		sc.CalculateSpringForce(this);
