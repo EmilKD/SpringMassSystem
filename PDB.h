@@ -60,15 +60,15 @@ public:
 	vector<Particle> Particles{};
 	int n{ 0 };
 	float time{ 0.0f };
-	float Gravity{ -9.83f };
-	float Drag{ 0.1f };
+	float Gravity{ -98.3f };
+	float Drag{ 0.01f };
 	float repulsion{ 100.0f };
 	float repulsionRadius{ 2 };
 
 	vector<SpringConstraint> sConstraints{};
 
-	vector<int> SpringParticles{}; // 
-	vector<float> SpringConsts{}; // <float ks, float kd, float l0, ... >
+	//vector<int> SpringParticles{}; // 
+	//vector<float> SpringConsts{}; // <float ks, float kd, float l0, ... >
 	vector<int> Ignoreparticles{};
 
 private:
@@ -80,7 +80,7 @@ private:
 class SpringConstraint
 {
 public:
-	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float kstiff = 1000.0f, float kdamp = 100.0f, float l0 = 4.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
+	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float kstiff = 10000.0f, float kdamp = 100.0f, float l0 = 4.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
 	{
 		glm::vec3 pos12 = p1->p - p2->p;
 		float pmag = glm::length(pos12);
