@@ -150,7 +150,7 @@ private:
 	float ks;
 	float kd;
 	float restLength;
-	float PlasticityForce{1000.0f};
+	float PlasticityForce{10000.0f};
 	array<int, 2> particleIDs;
 };
 
