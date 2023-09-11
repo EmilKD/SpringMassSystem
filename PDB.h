@@ -30,7 +30,7 @@ struct Particle
 		if(velocity)
 			v = *velocity;
 		else
-			v = { 0, 0, 0 };
+			v = { 0, -60, 0 };
 		if(force)
 			f = *force;
 		else
@@ -60,10 +60,10 @@ public:
 	vector<Particle> Particles{};
 	int n{ 0 };
 	float time{ 0.0f };
-	float Gravity{ -98.3f };
-	float Drag{ 0.01f };
-	float repulsion{ 100.0f };
-	float repulsionRadius{ 2 };
+	float Gravity{ 0.0f };//{ -98.3f };
+	float Drag{ 0.0f };
+	float repulsion{ 0.0f };
+	float repulsionRadius{ 0 };
 
 	vector<SpringConstraint> sConstraints{};
 
@@ -80,7 +80,7 @@ private:
 class SpringConstraint
 {
 public:
-	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float kstiff = 10000.0f, float kdamp = 100.0f, float l0 = 4.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
+	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float l0 = 2.0f, float kstiff = 5000.0f, float kdamp = 50.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
 	{
 		glm::vec3 pos12 = p1->p - p2->p;
 		float pmag = glm::length(pos12);
@@ -150,7 +150,7 @@ private:
 	float ks;
 	float kd;
 	float restLength;
-	float PlasticityForce{10000.0f};
+	float PlasticityForce{300.0f};
 	array<int, 2> particleIDs;
 };
 

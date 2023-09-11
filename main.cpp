@@ -1,5 +1,7 @@
 #include"Graphics.h"
 #include"Shader.h"
+#include<chrono>
+#include<thread>
 
 using std::cout, std::endl, std::vector, std::array;
 
@@ -196,46 +198,84 @@ void drag()
 //=====================================================================================================================
 int main()
 {
+	using namespace std::this_thread;
+	using namespace std::chrono;
 
 	// Creating the Mass Spring Grid
-	glm::vec3 pos0, pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, pos10, pos11;
-	pos0 = glm::vec3(-6, 16, 0);
-	pos1 = glm::vec3(-2, 16, 0);
-	pos2 = glm::vec3(2, 16, 0);
-	pos3 = glm::vec3(6, 16, 0);
-	pos4 = glm::vec3(-6, 12, 0);
-	pos5 = glm::vec3(-2, 12, 0);
-	pos6 = glm::vec3(2, 12, 0);
-	pos7 = glm::vec3(6, 12, 0);
-	pos8 = glm::vec3(-6, 8, 0);
-	pos9 = glm::vec3(-2, 8, 0);
-	pos10 = glm::vec3(2, 8, 0);
-	pos11= glm::vec3(6, 8, 0);
+	glm::vec3 pos0, pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, pos10, pos11, pos12, pos13, pos14, pos15, pos16, pos17, pos18, pos19, pos20, pos21, pos22, pos23;
+	pos0 = glm::vec3(-5, 16, 0);
+	pos1 = glm::vec3(-3, 16, 0);
+	pos2 = glm::vec3(-1, 16, 0);
+	pos3 = glm::vec3(1, 16, 0);
+	pos4 = glm::vec3(3, 16, 0);
+	pos5 = glm::vec3(5, 16, 0);
+	pos6 = glm::vec3(-5, 14, 0);
+	pos7 = glm::vec3(-3, 14, 0);
+	pos8 = glm::vec3(-1, 14, 0);
+	pos9 = glm::vec3(1, 14, 0);
+	pos10 = glm::vec3(3, 14, 0);
+	pos11 = glm::vec3(5, 14, 0);
+	pos12 = glm::vec3(-5, 12, 0);
+	pos13 = glm::vec3(-3, 11.6, 0);
+	pos14 = glm::vec3(-1, 11.4, 0);
+	pos15 = glm::vec3(1, 11.4, 0);
+	pos16 = glm::vec3(3, 11.6, 0);
+	pos17 = glm::vec3(5, 12, 0);
+	pos18 = glm::vec3(-5, 10, 0);
+	pos19 = glm::vec3(-3, 9.5, 0);
+	pos20 = glm::vec3(-1, 9.2, 0);
+	pos21 = glm::vec3(1, 9.2, 0);
+	pos22 = glm::vec3(3, 9.5, 0);
+	pos23 = glm::vec3(5, 10, 0);
 
-	Particle p0(0, 1.0f, &pos0);
+	Particle p0(0, 0.94f, &pos0);
 	ps.AddParticle(&p0);
-	Particle p1(1, 1.0f, &pos1);
+	Particle p1(1, 0.94f, &pos1);
 	ps.AddParticle(&p1);
-	Particle p2(2, 1.0f, &pos2);
+	Particle p2(2, 0.94f, &pos2);
 	ps.AddParticle(&p2);
-	Particle p3(3, 1.0f, &pos3);
+	Particle p3(3, 0.94f, &pos3);
 	ps.AddParticle(&p3);
-	Particle p4(4, 1.0f, &pos4);
+	Particle p4(4, 0.94f, &pos4);
 	ps.AddParticle(&p4);
-	Particle p5(5, 1.0f, &pos5);
+	Particle p5(5, 0.94f, &pos5);
 	ps.AddParticle(&p5);
-	Particle p6(6, 1.0f, &pos6);
+	Particle p6(6, 0.94f, &pos6);
 	ps.AddParticle(&p6);
-	Particle p7(7, 1.0f, &pos7);
+	Particle p7(7, 0.94f, &pos7);
 	ps.AddParticle(&p7);
-	Particle p8(8, 1.0f, &pos8);
+	Particle p8(8, 0.94f, &pos8);
 	ps.AddParticle(&p8);
-	Particle p9(9, 1.0f, &pos9);
+	Particle p9(9, 0.94f, &pos9);
 	ps.AddParticle(&p9);
-	Particle p10(10, 1.0f, &pos10);
+	Particle p10(10, 0.94f, &pos10);
 	ps.AddParticle(&p10);
-	Particle p11(11, 1.0f, &pos11);
+	Particle p11(11, 0.94f, &pos11);
 	ps.AddParticle(&p11);
+	Particle p12(12, 0.94f, &pos12);
+	ps.AddParticle(&p12);
+	Particle p13(13, 0.94f, &pos13);
+	ps.AddParticle(&p13);
+	Particle p14(14, 0.94f, &pos14);
+	ps.AddParticle(&p14);
+	Particle p15(15, 0.94f, &pos15);
+	ps.AddParticle(&p15);
+	Particle p16(16, 0.94f, &pos16);
+	ps.AddParticle(&p16);
+	Particle p17(17, 0.94f, &pos17);
+	ps.AddParticle(&p17);
+	Particle p18(18, 0.94f, &pos18);
+	ps.AddParticle(&p18);
+	Particle p19(19, 0.94f, &pos19);
+	ps.AddParticle(&p19);
+	Particle p20(20, 0.94f, &pos20);
+	ps.AddParticle(&p20);
+	Particle p21(21, 0.94f, &pos21);
+	ps.AddParticle(&p21);
+	Particle p22(22, 0.94f, &pos22);
+	ps.AddParticle(&p22);
+	Particle p23(23, 0.94f, &pos23);
+	ps.AddParticle(&p23);
 
 	//ps.Ignoreparticles.push_back(0);
 	//ps.Ignoreparticles.push_back(1);
@@ -243,34 +283,73 @@ int main()
 	//ps.Ignoreparticles.push_back(3);
 	
 	ps.sConstraints.push_back(SpringConstraint(0, &ps.Particles[0], &ps.Particles[1]));
-	ps.sConstraints.push_back(SpringConstraint(1, &ps.Particles[0], &ps.Particles[4]));
-	ps.sConstraints.push_back(SpringConstraint(2, &ps.Particles[0], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(1, &ps.Particles[0], &ps.Particles[6]));
+	ps.sConstraints.push_back(SpringConstraint(2, &ps.Particles[0], &ps.Particles[7]));
 	ps.sConstraints.push_back(SpringConstraint(3, &ps.Particles[1], &ps.Particles[2]));
-	ps.sConstraints.push_back(SpringConstraint(4, &ps.Particles[1], &ps.Particles[5]));
-	ps.sConstraints.push_back(SpringConstraint(5, &ps.Particles[1], &ps.Particles[6]));
+	ps.sConstraints.push_back(SpringConstraint(4, &ps.Particles[1], &ps.Particles[7]));
+	ps.sConstraints.push_back(SpringConstraint(5, &ps.Particles[1], &ps.Particles[8]));
 	ps.sConstraints.push_back(SpringConstraint(6, &ps.Particles[2], &ps.Particles[3]));
-	ps.sConstraints.push_back(SpringConstraint(7, &ps.Particles[2], &ps.Particles[6]));
-	ps.sConstraints.push_back(SpringConstraint(8, &ps.Particles[2], &ps.Particles[7]));
-	ps.sConstraints.push_back(SpringConstraint(9, &ps.Particles[3], &ps.Particles[7]));
-	ps.sConstraints.push_back(SpringConstraint(10, &ps.Particles[4], &ps.Particles[1]));
-	ps.sConstraints.push_back(SpringConstraint(11, &ps.Particles[4], &ps.Particles[5]));
-	ps.sConstraints.push_back(SpringConstraint(12, &ps.Particles[4], &ps.Particles[8]));
-	ps.sConstraints.push_back(SpringConstraint(13, &ps.Particles[4], &ps.Particles[9]));
-	ps.sConstraints.push_back(SpringConstraint(14, &ps.Particles[5], &ps.Particles[2]));
-	ps.sConstraints.push_back(SpringConstraint(15, &ps.Particles[5], &ps.Particles[6]));
-	ps.sConstraints.push_back(SpringConstraint(16, &ps.Particles[5], &ps.Particles[9]));
-	ps.sConstraints.push_back(SpringConstraint(17, &ps.Particles[5], &ps.Particles[10]));
-	ps.sConstraints.push_back(SpringConstraint(18, &ps.Particles[6], &ps.Particles[3]));
-	ps.sConstraints.push_back(SpringConstraint(19, &ps.Particles[6], &ps.Particles[7]));
-	ps.sConstraints.push_back(SpringConstraint(20, &ps.Particles[6], &ps.Particles[10]));
-	ps.sConstraints.push_back(SpringConstraint(21, &ps.Particles[6], &ps.Particles[11]));
-	ps.sConstraints.push_back(SpringConstraint(22, &ps.Particles[7], &ps.Particles[11]));
-	ps.sConstraints.push_back(SpringConstraint(23, &ps.Particles[8], &ps.Particles[5]));
-	ps.sConstraints.push_back(SpringConstraint(24, &ps.Particles[8], &ps.Particles[9]));
-	ps.sConstraints.push_back(SpringConstraint(25, &ps.Particles[9], &ps.Particles[6]));
-	ps.sConstraints.push_back(SpringConstraint(26, &ps.Particles[9], &ps.Particles[10]));
-	ps.sConstraints.push_back(SpringConstraint(27, &ps.Particles[10], &ps.Particles[7]));
-	ps.sConstraints.push_back(SpringConstraint(28, &ps.Particles[10], &ps.Particles[11]));
+	ps.sConstraints.push_back(SpringConstraint(7, &ps.Particles[2], &ps.Particles[8]));
+	ps.sConstraints.push_back(SpringConstraint(8, &ps.Particles[2], &ps.Particles[9]));
+	ps.sConstraints.push_back(SpringConstraint(9, &ps.Particles[3], &ps.Particles[4]));
+	ps.sConstraints.push_back(SpringConstraint(10, &ps.Particles[3], &ps.Particles[9]));
+	ps.sConstraints.push_back(SpringConstraint(11, &ps.Particles[3], &ps.Particles[10]));
+	ps.sConstraints.push_back(SpringConstraint(12, &ps.Particles[4], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(13, &ps.Particles[4], &ps.Particles[10]));
+	ps.sConstraints.push_back(SpringConstraint(14, &ps.Particles[4], &ps.Particles[11]));
+	ps.sConstraints.push_back(SpringConstraint(15, &ps.Particles[5], &ps.Particles[11]));
+	ps.sConstraints.push_back(SpringConstraint(16, &ps.Particles[6], &ps.Particles[1]));
+	ps.sConstraints.push_back(SpringConstraint(17, &ps.Particles[6], &ps.Particles[7]));
+	ps.sConstraints.push_back(SpringConstraint(18, &ps.Particles[6], &ps.Particles[12]));
+	ps.sConstraints.push_back(SpringConstraint(19, &ps.Particles[6], &ps.Particles[13]));
+	ps.sConstraints.push_back(SpringConstraint(20, &ps.Particles[7], &ps.Particles[2]));
+	ps.sConstraints.push_back(SpringConstraint(21, &ps.Particles[7], &ps.Particles[8]));
+	ps.sConstraints.push_back(SpringConstraint(22, &ps.Particles[7], &ps.Particles[13]));
+	ps.sConstraints.push_back(SpringConstraint(23, &ps.Particles[7], &ps.Particles[14]));
+	ps.sConstraints.push_back(SpringConstraint(24, &ps.Particles[8], &ps.Particles[3]));
+	ps.sConstraints.push_back(SpringConstraint(25, &ps.Particles[8], &ps.Particles[9]));
+	ps.sConstraints.push_back(SpringConstraint(26, &ps.Particles[8], &ps.Particles[14]));
+	ps.sConstraints.push_back(SpringConstraint(27, &ps.Particles[8], &ps.Particles[15]));
+	ps.sConstraints.push_back(SpringConstraint(28, &ps.Particles[9], &ps.Particles[4]));
+	ps.sConstraints.push_back(SpringConstraint(29, &ps.Particles[9], &ps.Particles[10]));
+	ps.sConstraints.push_back(SpringConstraint(30, &ps.Particles[9], &ps.Particles[15]));
+	ps.sConstraints.push_back(SpringConstraint(31, &ps.Particles[9], &ps.Particles[16]));
+	ps.sConstraints.push_back(SpringConstraint(32, &ps.Particles[10], &ps.Particles[5]));
+	ps.sConstraints.push_back(SpringConstraint(33, &ps.Particles[10], &ps.Particles[11]));
+	ps.sConstraints.push_back(SpringConstraint(34, &ps.Particles[10], &ps.Particles[16]));
+	ps.sConstraints.push_back(SpringConstraint(35, &ps.Particles[10], &ps.Particles[17]));
+	ps.sConstraints.push_back(SpringConstraint(36, &ps.Particles[11], &ps.Particles[17]));
+	ps.sConstraints.push_back(SpringConstraint(37, &ps.Particles[12], &ps.Particles[7]));
+	ps.sConstraints.push_back(SpringConstraint(38, &ps.Particles[12], &ps.Particles[13]));
+	ps.sConstraints.push_back(SpringConstraint(39, &ps.Particles[12], &ps.Particles[18]));
+	ps.sConstraints.push_back(SpringConstraint(40, &ps.Particles[12], &ps.Particles[19]));
+	ps.sConstraints.push_back(SpringConstraint(41, &ps.Particles[13], &ps.Particles[8]));
+	ps.sConstraints.push_back(SpringConstraint(42, &ps.Particles[13], &ps.Particles[14]));
+	ps.sConstraints.push_back(SpringConstraint(43, &ps.Particles[13], &ps.Particles[19]));
+	ps.sConstraints.push_back(SpringConstraint(44, &ps.Particles[13], &ps.Particles[20]));
+	ps.sConstraints.push_back(SpringConstraint(45, &ps.Particles[14], &ps.Particles[9]));
+	ps.sConstraints.push_back(SpringConstraint(46, &ps.Particles[14], &ps.Particles[15]));
+	ps.sConstraints.push_back(SpringConstraint(47, &ps.Particles[14], &ps.Particles[20]));
+	ps.sConstraints.push_back(SpringConstraint(48, &ps.Particles[14], &ps.Particles[21]));
+	ps.sConstraints.push_back(SpringConstraint(49, &ps.Particles[15], &ps.Particles[10]));
+	ps.sConstraints.push_back(SpringConstraint(50, &ps.Particles[15], &ps.Particles[16]));
+	ps.sConstraints.push_back(SpringConstraint(51, &ps.Particles[15], &ps.Particles[21]));
+	ps.sConstraints.push_back(SpringConstraint(52, &ps.Particles[15], &ps.Particles[22]));
+	ps.sConstraints.push_back(SpringConstraint(53, &ps.Particles[16], &ps.Particles[11]));
+	ps.sConstraints.push_back(SpringConstraint(54, &ps.Particles[16], &ps.Particles[17]));
+	ps.sConstraints.push_back(SpringConstraint(55, &ps.Particles[16], &ps.Particles[22]));
+	ps.sConstraints.push_back(SpringConstraint(56, &ps.Particles[16], &ps.Particles[23]));
+	ps.sConstraints.push_back(SpringConstraint(57, &ps.Particles[17], &ps.Particles[23]));
+	ps.sConstraints.push_back(SpringConstraint(58, &ps.Particles[18], &ps.Particles[13]));
+	ps.sConstraints.push_back(SpringConstraint(59, &ps.Particles[18], &ps.Particles[19]));
+	ps.sConstraints.push_back(SpringConstraint(60, &ps.Particles[19], &ps.Particles[14]));
+	ps.sConstraints.push_back(SpringConstraint(61, &ps.Particles[19], &ps.Particles[20]));
+	ps.sConstraints.push_back(SpringConstraint(62, &ps.Particles[20], &ps.Particles[15]));
+	ps.sConstraints.push_back(SpringConstraint(63, &ps.Particles[20], &ps.Particles[21]));
+	ps.sConstraints.push_back(SpringConstraint(64, &ps.Particles[21], &ps.Particles[16]));
+	ps.sConstraints.push_back(SpringConstraint(65, &ps.Particles[21], &ps.Particles[22]));
+	ps.sConstraints.push_back(SpringConstraint(66, &ps.Particles[22], &ps.Particles[17]));
+	ps.sConstraints.push_back(SpringConstraint(67, &ps.Particles[22], &ps.Particles[23]));
 
 	/*ps.SpringParticles.push_back(0);
 	ps.SpringParticles.push_back(1);
@@ -358,6 +437,8 @@ int main()
 	GraphicalObj SpringShape(SpringShader, "./Textures/Spring.png");
 	Colors color;
 
+	bool start_flag{ true };
+
 	//=================================================================================================================
 	// Program Loop ---------------------------------------------------------------------------------------------------
 	//=================================================================================================================
@@ -431,6 +512,11 @@ int main()
 			}
 		}
 
+		if (start_flag)
+		{
+			sleep_for(seconds(2));
+			start_flag = false;
+		}
 		// Print FPS
 		//if (timer > 500)
 		//{
