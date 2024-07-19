@@ -60,7 +60,7 @@ public:
 	vector<Particle> Particles{};
 	int n{ 0 };
 	float time{ 0.0f };
-	float Gravity{ -9.83f };
+	float Gravity{ -98.3f };
 	float Drag{ 0.0f };
 	float repulsion{ 0.0f };
 	float repulsionRadius{ 0 };
@@ -80,7 +80,7 @@ private:
 class SpringConstraint
 {
 public:
-	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float l0 = 2.0f, float kstiff = 5000.0f, float kdamp = 50.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
+	SpringConstraint(unsigned int id, Particle* p1, Particle* p2, float l0 = 2.0f, float kstiff = 500.0f, float kdamp = 50.0f) : ID{id}, ks { kstiff }, kd{ kdamp }, particleIDs{ p1->ID, p2->ID }
 	{
 		glm::vec3 pos12 = p1->p - p2->p;
 		float pmag = glm::length(pos12);
