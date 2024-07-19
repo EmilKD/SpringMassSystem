@@ -45,14 +45,14 @@ struct Colors
 	glm::vec3 White{glm::vec3(1.0f, 1.0f, 1.0f)};
 };
 
-unsigned int GetClosestParticle(ParticleSystem* ps, Particle& ref)
+unsigned int GetClosestParticle(const ParticleSystem &ps, Particle& ref)
 {
 	float closestDistance{ 1000 };
 	unsigned int closestID{ 0 };
 	glm::vec3 deltap{ glm::vec3(0.0f) };
 	float dist{ 0 };
 
-	for (Particle p : ps->Particles)
+	for (const Particle &p : ps.Particles)
 	{
 		if (p.ID == ref.ID)
 			continue;
@@ -148,7 +148,7 @@ void mouse_clicked(GLFWwindow* window, int button, int action, int mod)
 		Particle p(lastID, 0.1f, &pos, &vel);
 		ps.AddParticle(&p);
 
-		ps.sConstraints.push_back(SpringConstraint(ps.sConstraints.size(),  & ps.Particles[GetClosestParticle(&ps, p)], &ps.Particles[lastID]));
+		ps.sConstraints.push_back(SpringConstraint(ps.sConstraints.size(),  & ps.Particles[GetClosestParticle(ps, p)], &ps.Particles[lastID]));
 
 		//ps.SpringParticles.push_back(GetClosestParticle(&ps, p));
 		//ps.SpringParticles.push_back(lastID);
@@ -166,7 +166,7 @@ void drag()
 	{	
 		DragParticle.ID = ps.n;
 		DragParticle.p = pos;
-		unsigned int closestID = GetClosestParticle(&ps, DragParticle);
+		unsigned int closestID = GetClosestParticle(ps, DragParticle);
 
 		ps.AddParticle(&DragParticle);
 		ps.Ignoreparticles.push_back(DragParticle.ID);
@@ -512,11 +512,11 @@ int main()
 			}
 		}
 
-		if (start_flag)
+		/*if (start_flag)
 		{
 			sleep_for(seconds(2));
 			start_flag = false;
-		}
+		}*/
 		// Print FPS
 		//if (timer > 500)
 		//{

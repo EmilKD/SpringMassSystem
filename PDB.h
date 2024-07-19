@@ -30,7 +30,7 @@ struct Particle
 		if(velocity)
 			v = *velocity;
 		else
-			v = { 0, -60, 0 };
+			v = { 0, 0, 0 };
 		if(force)
 			f = *force;
 		else
@@ -60,7 +60,7 @@ public:
 	vector<Particle> Particles{};
 	int n{ 0 };
 	float time{ 0.0f };
-	float Gravity{ 0.0f };//{ -98.3f };
+	float Gravity{ -9.83f };
 	float Drag{ 0.0f };
 	float repulsion{ 0.0f };
 	float repulsionRadius{ 0 };
@@ -150,7 +150,7 @@ private:
 	float ks;
 	float kd;
 	float restLength;
-	float PlasticityForce{300.0f};
+	float PlasticityForce{3000.0f};
 	array<int, 2> particleIDs;
 };
 
