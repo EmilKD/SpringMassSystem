@@ -6,7 +6,7 @@ The visualization of the simulator is done using an OpenGL project i'd developed
 ![Demo](Demo/Non-Stiff%20Spring%20System%20with%20Euler.gif)
 
 ## A short demo of the mass-spring system with Plasticity
-![Demo](Demo/Non-Stiff%20Spring%20System%20with%20Euler.gif)
+![Demo](Demo/Plastic%20Deformation.gif)
 
 ## Dependencies
 The following libraries and files should be placed in a folder named 'Libraries' in the project path:
